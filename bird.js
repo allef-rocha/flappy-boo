@@ -8,6 +8,8 @@ function Bird() {
     this.onTheGround = false
 
     this.image = random(ghostImgsTint)
+    this.image[0].resize(this.r*2, this.r*2)
+    this.image[1].resize(this.r*2, this.r*2)
 
     this.score = 0
 
