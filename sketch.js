@@ -99,6 +99,8 @@ let pulse = false
 let init = false
 let littleTime = false
 
+let showHitBox = false
+
 let moonLight
 
 function preload() {
