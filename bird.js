@@ -6,6 +6,7 @@ function Bird() {
     this.acc = 0.8
     this.maxSpeed = birdMaxSpeed
     this.onTheGround = false
+    this.color = color(random(100, 255), random(100, 255), random(100, 255), 125)
 
     this.image = random(ghostImgsTint)
 
@@ -14,15 +15,23 @@ function Bird() {
     this.show = function () {
         // fill(this.color)
         noFill()
-        imageMode(CENTER)
         //tint(255,100)
-        if(this.velocity > 0 || this.onTheGround){
-            image(this.image[0],this.x,this.y, this.r*2, this.r*2)
+        if(!mobileDevice){
+            imageMode(CENTER)
+            if(this.velocity > 0 || this.onTheGround){
+                image(this.image[0],this.x,this.y, this.r*2, this.r*2)
+            }else{
+                image(this.image[1],this.x,this.y)
+            }
+            // noTint()
+            imageMode(CORNER)
         }else{
-            image(this.image[1],this.x,this.y)
+            fill(this.color)
+            stroke(0)
+            ellipse(this.x, this.y, this.r * 2)
+            noFill()
+            noStroke()
         }
-        noTint()
-        imageMode(CORNER)
         if(showHitBox){
             noFill()
             stroke(255,0,0)
