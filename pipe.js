@@ -14,8 +14,12 @@ function Pipe(x, y){
         image(pipeTopImg,this.x,this.y-imgPipeHeight)
         image(pipeBtmImg,this.x,this.y+this.gap)
 
-        // rect(this.x, 0, this.w, this.y)
-        // rect(this.x, this.y + this.gap, this.w, height - this.y - this.gap)
+        if(showHitBox){
+            stroke(255,0,0)
+            noFill()
+            rect(this.x, 0, this.w, this.y)
+            rect(this.x, this.y + this.gap, this.w, height - this.y - this.gap)
+        }
     }
 
     this.update = function(){

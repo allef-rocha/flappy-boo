@@ -8,8 +8,6 @@ function Bird() {
     this.onTheGround = false
 
     this.image = random(ghostImgsTint)
-    this.image[0].resize(this.r*2, this.r*2)
-    this.image[1].resize(this.r*2, this.r*2)
 
     this.score = 0
 
@@ -25,8 +23,11 @@ function Bird() {
         }
         noTint()
         imageMode(CORNER)
-        // stroke(255,0,0)
-        // ellipse(this.x, this.y, this.r * 2)
+        if(showHitBox){
+            noFill()
+            stroke(255,0,0)
+            ellipse(this.x, this.y, this.r * 2)
+        }
     }
     this.update = function () {
         this.velocity = min(this.velocity + this.acc, this.maxSpeed)

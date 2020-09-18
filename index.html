@@ -92,17 +92,6 @@
 
 		}
 
-		#chartContainer {
-			width: 450px;
-			height: 450px;
-			padding-left: 10px;
-		}
-
-		#chartContainer p {
-			text-align: left;
-			padding-left: 0px;
-		}
-
 		#speedControl {
 			font-family: 'moonBold';
 			margin-left: 60px;
@@ -148,10 +137,6 @@
 			background: rgb(16, 25, 54);
 		}
 
-		#chartContainer{
-			display: block;
-			display: none;
-		}
 		#menu{
 			margin: 30px;
 			padding: 50px;
@@ -193,97 +178,6 @@
 				<a href="#train" id="train-button"class="train button">Train</a>
 			</div>
 		</div>
-		<div id="chartContainer">
-			<canvas id="myChart" width="450" height="450"></canvas>
-			<div>
-				<div>
-					<p id="speedControl">
-						Speed: <input id="speedSlider" type="range" min="1" max="100" value="1"> <span
-							id="speed">1</span>
-					</p>
-				<div id="bottom">
-					<div>
-						<p id="generation">Generation:</p>
-						<p id="score">Current score:</p>
-						<p id="highScore">Record:</p>
-					</div>
-					<div id="buttons">
-						<a href="#killAll" id="kill-all-button"class="kill button">Kill All</a>
-						<a href="#pause" id="pause-button"class="pause button">Play</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-
-
-	<script>
-		let ctx = document.getElementById('myChart').getContext('2d');
-		Chart.defaults.global.defaultFontFamily = 'moonLight'
-		Chart.defaults.global.defaultFontColor = 'white'
-		Chart.defaults.global.defaultFontStyle = 'bold'
-
-		let myChart = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels: chartXlabels,
-				datasets: [{
-					label: 'Fitness',
-					lineTension: 0,
-					data: chartYlabels,
-					backgroundColor: [
-						'rgba(255, 255, 255, 0.03)'
-					],
-					borderColor: [
-						'rgba(255, 100, 100, 1)'
-					],
-					borderWidth: 1
-				}]
-			},
-			options: {
-				fontFamily: 'moonLight',
-				legend: {
-					display: false
-				},
-				scales: {
-					yAxes: [{
-						gridLines: {
-							color: "rgba(255,255,255,0.1)"
-						},
-						scaleLabel: {
-							display: true,
-							labelString: 'Distance'
-						}
-					}],
-					xAxes: [{
-						gridLines: {
-							color: "rgba(255,255,255,0.2)"
-						},
-						scaleLabel: {
-							display: true,
-							labelString: 'Generation'
-						}
-					}]
-				},
-				title: {
-					display: true,
-					fontSize: 20,
-					text: "Evolution"
-				},
-				layout: {
-					padding: {
-						left: 0,
-						right: 0,
-						top: 0,
-						bottom: 0
-					}
-				}
-			}
-		});
-	</script>
-
 </body>
 
 </html>
