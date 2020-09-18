@@ -30,6 +30,13 @@
 			src: url('fonts/Moon Bold.otf');
 		}
 
+		@media (max-width: 800px) {
+			body, html {
+				display: none;
+			}
+		}
+
+
 		* {
 			font-family: 'moonLight';
 
@@ -47,7 +54,8 @@
 			align-items: center;
 		}
 
-		h1, h2 {
+		h1,
+		h2 {
 			margin: 0;
 			padding: 10px;
 			font-family: 'moonBold';
@@ -102,7 +110,7 @@
 			justify-content: space-between;
 		}
 
-		#buttons{
+		#buttons {
 			/* padding: 10px; */
 			margin-left: 50px;
 			width: 200px;
@@ -114,30 +122,34 @@
 			justify-content: space-between;
 			align-content: center;
 		}
-		.button{
+
+		.button {
 			font-family: 'moonBold';
 			margin: 0px;
 			padding: 10px;
 			text-decoration: none;
 			color: #eee;
-            font-size: 1em;
-            border-radius: 30px;
+			font-size: 1em;
+			border-radius: 30px;
 			background: rgb(70, 22, 22);
-			box-shadow: 2px 2px 1px  #eee;
+			box-shadow: 2px 2px 1px #eee;
 			align-self: right;
-        }
-		.button:hover{
-			background: rgb(51, 15, 15);
-			box-shadow: 1px 1px 0px  #eee;
 		}
-		#train-button{
+
+		.button:hover {
+			background: rgb(51, 15, 15);
+			box-shadow: 1px 1px 0px #eee;
+		}
+
+		#train-button {
 			background: rgb(22, 33, 70);
 		}
-		#train-button:hover{
+
+		#train-button:hover {
 			background: rgb(16, 25, 54);
 		}
 
-		#menu{
+		#menu {
 			margin: 30px;
 			padding: 50px;
 			height: 400px;
@@ -154,7 +166,7 @@
 
 		}
 
-		#menu div{
+		#menu div {
 			padding: 20px;
 			align-self: center;
 		}
@@ -174,8 +186,8 @@
 
 			</div>
 			<div>
-				<a href="#play" id="play-button"class="play button">Play</a>
-				<a href="#train" id="train-button"class="train button">Train</a>
+				<a href="#play" id="play-button" class="play button">Play</a>
+				<a href="#train" id="train-button" class="train button">Train</a>
 			</div>
 		</div>
 </body>

@@ -17,7 +17,7 @@ function Bird() {
         imageMode(CENTER)
         //tint(255,100)
         if(this.velocity > 0 || this.onTheGround){
-            image(this.image[0],this.x,this.y)
+            image(this.image[0],this.x,this.y, this.r*2, this.r*2)
         }else{
             image(this.image[1],this.x,this.y)
         }
