@@ -113,7 +113,7 @@ function preload() {
 		ghostImgs[i].push(loadImage('assets/ghosts/ghost' + (i + 1) + '-1.png'))
 	}
 
-	moonLight = loadFont('../fonts/Moon Bold.otf')
+	moonLight = loadFont('fonts/Moon Bold.otf')
 	if(localStorage.flappy_boo_record){
 		highestPoints = localStorage.flappy_boo_record
 	}else{
