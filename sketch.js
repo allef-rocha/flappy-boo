@@ -383,7 +383,7 @@ function setGradient(x, y, w, h, c1, c2) {
 	strokeWeight(1)
 }
 
-function mousePressed() {
+function touchStarted() {
 	if (!starting) {
 		if (!gameOver) {
 			bird.jump()
