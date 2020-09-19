@@ -8,7 +8,7 @@ function Bird() {
     this.onTheGround = false
     this.color = color(random(100, 255), random(100, 255), random(100, 255), 125)
 
-    if (!mobileDevice) {
+    if (!mobileDevice && !mobileBrowser) {
         this.image = random(ghostImgsTint)
     }else{
         this.image = createGraphics(50, 50)
@@ -19,7 +19,7 @@ function Bird() {
         // fill(this.color)
         noFill()
         //tint(255,100)
-        if (!mobileDevice) {
+        if (!mobileDevice && !mobileBrowser) {
             imageMode(CENTER)
             if (this.velocity > 0 || this.onTheGround) {
                 image(this.image[0], this.x, this.y, this.r * 2, this.r * 2)
