@@ -134,10 +134,8 @@ p5.Image.prototype.tint = function (img, r, g, b, a) {
 }
 
 function detectMob() {
-    return (window.innerWidth <= 800 || window.innerHeight >= 1500)
+    return (window.innerWidth <= 800 || window.innerHeight >= 1500 || "ontouchstart" in document.documentElement)
 }
-
-
 
 window.mobileAndTabletCheck = function() {
 	let check = false;
