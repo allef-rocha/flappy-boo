@@ -8,33 +8,36 @@ function Bird() {
     this.onTheGround = false
     this.color = color(random(100, 255), random(100, 255), random(100, 255), 125)
 
-    this.image = random(ghostImgsTint)
-
+    if (!mobileDevice) {
+        this.image = random(ghostImgsTint)
+    }else{
+        this.image = createGraphics(50, 50)
+    }
     this.score = 0
 
     this.show = function () {
         // fill(this.color)
         noFill()
         //tint(255,100)
-        if(!mobileDevice){
+        if (!mobileDevice) {
             imageMode(CENTER)
-            if(this.velocity > 0 || this.onTheGround){
-                image(this.image[0],this.x,this.y, this.r*2, this.r*2)
-            }else{
-                image(this.image[1],this.x,this.y)
+            if (this.velocity > 0 || this.onTheGround) {
+                image(this.image[0], this.x, this.y, this.r * 2, this.r * 2)
+            } else {
+                image(this.image[1], this.x, this.y)
             }
             // noTint()
             imageMode(CORNER)
-        }else{
+        } else {
             fill(this.color)
             stroke(0)
             ellipse(this.x, this.y, this.r * 2)
             noFill()
             noStroke()
         }
-        if(showHitBox){
+        if (showHitBox) {
             noFill()
-            stroke(255,0,0)
+            stroke(255, 0, 0)
             ellipse(this.x, this.y, this.r * 2)
         }
     }
@@ -44,11 +47,11 @@ function Bird() {
         if (this.y < this.r) {
             this.y = this.r
             this.velocity = 0
-        }else if(this.y > height-this.r){
+        } else if (this.y > height - this.r) {
             this.onTheGround = true
             this.y = height - this.r
             this.velocity = 0
-        }else{
+        } else {
             this.onTheGround = false
         }
 
