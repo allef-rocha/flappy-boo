@@ -134,7 +134,7 @@ p5.Image.prototype.tint = function (img, r, g, b, a) {
 }
 
 function detectMob() {
-    return (window.innerWidth <= 800)
+    return (window.innerWidth <= 800 || window.innerHeight >= 1500)
 }
 
 
