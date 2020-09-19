@@ -32,6 +32,17 @@ function Bird() {
             fill(this.color)
             stroke(0)
             ellipse(this.x, this.y, this.r * 2)
+            line(this.x+5, this.y+13, this.x+17, this.y+13)
+            if (this.velocity > 0 || this.onTheGround) {
+                fill(255, 125)
+                ellipse(this.x+5, this.y, 15)
+                ellipse(this.x+20, this.y+1, 10, 12)
+            } else {
+                line(this.x, this.y, this.x+12.5, this.y)
+                line(this.x+15, this.y, this.x+25, this.y)
+            }
+            
+            noStroke()
             noFill()
             noStroke()
         }
