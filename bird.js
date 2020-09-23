@@ -6,7 +6,8 @@ function Bird() {
     this.acc = 0.8
     this.maxSpeed = birdMaxSpeed
     this.onTheGround = false
-    this.color = color(random(100, 255), random(100, 255), random(100, 255), 125)
+
+    this.color = color(random(125, 255),random(125, 255),random(125, 255), 125)
 
     if (!mobileDevice) {
         this.image = random(ghostImgsTint)
