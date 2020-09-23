@@ -18,7 +18,7 @@ function Ground(x,y,w,h){
     }
 
     this.isOffScreen = function(){
-        return (this.x < -this.w-10)
+        return (this.x < -this.w)
     }
 }
 

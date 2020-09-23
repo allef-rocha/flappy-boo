@@ -1,3 +1,6 @@
+const powerTime = 500
+let stage = 0
+
 function Bird() {
     this.x = birdX
     this.y = height / 2
@@ -6,21 +9,20 @@ function Bird() {
     this.acc = 0.8
     this.maxSpeed = birdMaxSpeed
     this.onTheGround = false
-
-    this.color = color(random(125, 255),random(125, 255),random(125, 255), 125)
-
-    if (!mobileDevice) {
-        this.image = random(ghostImgsTint)
-    }else{
-        this.image = createGraphics(50, 50)
-    }
+    this.imageIndex = floor(random(ghostImgsTint.length))
+    this.color = color(colors[this.imageIndex])
+    this.color.setAlpha(125)
+    this.image = ghostImgsTint[this.imageIndex]
     this.score = 0
+    this.intangible = false
+    this.clock = 0
 
     this.show = function () {
         // fill(this.color)
         noFill()
         //tint(255,100)
-        if (!mobileDevice) {
+        // if (!mobileDevice && !stage!=1) {
+        if (!stage!=1) {
             imageMode(CENTER)
             if (this.velocity > 0 || this.onTheGround) {
                 image(this.image[0], this.x, this.y, this.r * 2, this.r * 2)
@@ -31,7 +33,7 @@ function Bird() {
             imageMode(CORNER)
         } else {
             fill(this.color)
-            stroke(0)
+            stroke(255)
             ellipse(this.x, this.y, this.r * 2)
             line(this.x+5, this.y+13, this.x+17, this.y+13)
             if (this.velocity > 0 || this.onTheGround) {
@@ -54,6 +56,16 @@ function Bird() {
         }
     }
     this.update = function () {
+        if(this.intangible){
+            this.clock++
+            if(this.clock > powerTime){
+                this.toNormal()
+            }else if(this.clock > powerTime / 2){
+                if(count % 25 === 0){
+                    stage = stage === 0 ? 1 : 0
+                }
+            }
+        }
         this.velocity = min(this.velocity + this.acc, this.maxSpeed)
         this.y += this.velocity
         if (this.y < this.r) {
@@ -72,6 +84,18 @@ function Bird() {
 
     this.jump = function (jumpSize = birdJump) {
         this.velocity = -jumpSize
+    }
+
+    this.powerUp = function(){
+        this.intangible = true
+        this.clock = 0
+        stage = 1
+    }
+    
+    this.toNormal = function(){
+        this.intangible = false
+        this.clock = 0
+        stage = 0
     }
 
 }

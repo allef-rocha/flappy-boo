@@ -2,6 +2,19 @@ const width = 1000
 const height = 550
 const mobileWidth = 372
 
+const colors = [
+	"#C97A15",
+	"#119B28",	
+	"#67119B",	
+	"#DCD925",	
+	"#AE1313",	
+	"#DADADA",	
+	"#36CABE",	
+	"#DF4AC6",	
+	"#21247B",	
+	"#000000",	
+]
+
 const phrases = [
 	"   HAHAHA",
 	"  Again???",
@@ -36,6 +49,7 @@ const pipesDist = 90
 const pipeWidth = 80
 const pipeGap = 220
 const pipeSpeed = 4
+const pipeDistPixels = 360
 
 const TRAIN = 0
 const PLAY = 1
@@ -67,7 +81,6 @@ let grounds = []
 let clouds = []
 let stars = []
 let nearestPipe
-let secondPipe
 
 let count = 0
 let lastCount = 0
@@ -106,6 +119,10 @@ let showHitBox = false
 
 let moonLight
 let mobileDevice = false
+
+let msg = true
+
+let apple = null
 
 function preload() {
 	groundImg = loadImage('assets/ground.png')
@@ -180,9 +197,10 @@ function setup() {
 	pScore = document.getElementById("score")
 	pHighScore = document.getElementById("highScore")
 
-	pipes.push(new Pipe(width, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+	for (let i = 0; i < 5; i++) {
+		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+	}
 	nearestPipe = pipes[0]
-	secondPipe = null
 
 
 
@@ -208,12 +226,15 @@ function setup() {
 
 	i = 3
 	background(0)
+	
 
 }
 
 function draw() {
+	// frameRate(50)
 	background(0)
 	count++
+
 	if (reset) resetGame()
 	if (starting) {
 		counterText = i
@@ -226,11 +247,18 @@ function draw() {
 			i = 3
 		}
 	} else {
+		if(count % 1080 == 0){
+			apple = new Apple(nearestPipe.x + pipeDistPixels*5 - pipeDistPixels/2 + pipeWidth/2)
+		}
+		if(apple && apple.eaten(bird)){
+			apple = null
+			bird.powerUp()
+		}
 		// compute point
 		if (nearestPipe.x < birdX - birdRadius - pipeWidth) {
 			nearestPipe.notColided = true
-			nearestPipe = pipes[pipes.indexOf(nearestPipe) + 1]
-			secondPipe = pipes[pipes.indexOf(nearestPipe) + 1]
+			let nextIndex = pipes.indexOf(nearestPipe) + 1 >= pipes.length ? 0 : pipes.indexOf(nearestPipe) + 1
+			nearestPipe = pipes[nextIndex]
 			if (++currentPoints > highestPoints) {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
@@ -242,36 +270,37 @@ function draw() {
 
 
 		//update the pipes and remove if pipe is off-screen
-		pipes.forEach(pipe => {
-			pipe.update()
-		})
+		// pipes.forEach(pipe => {
+		// 	pipe.update()
+		// })
 		pipes.forEach((pipe, index) => {
+			pipe.update()
 			if (pipe.x < -pipeWidth - 5) {
-				pipes.splice(index, 1)
+				pipe.x = pipes.length * pipeDistPixels - pipeWidth - 5
+				pipe.y = random(1, height-1-pipeGap)
 			}
 		})
 
 		// add a new pipe each 'pipeDist' frames
-		if (count % pipesDist == 0) {
-			pipes.push(new Pipe(width, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
-			if (secondPipe == null && pipes[pipes.indexOf(nearestPipe) + 1]) {
-				secondPipe = pipes[pipes.indexOf(nearestPipe) + 1]
-			}
-		}
+		// if (count % pipesDist == 0) {
+
+		// 	pipes.push(new Pipe(width, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+
+		// }
 
 		grounds.forEach((ground, index) => {
 			ground.update()
 			if (ground.isOffScreen()) {
-				grounds.splice(index, 1)
-				grounds.push(new Ground(grounds[grounds.length - 1].x + imgGroundWidth, height, imgGroundWidth, imgGroundHeight))
+				ground.x = (grounds.length - 1) * imgGroundWidth
+				// grounds.splice(index, 1)
+				// grounds.push(new Ground(grounds[grounds.length - 1].x + imgGroundWidth, height, imgGroundWidth, imgGroundHeight))
 			}
 		})
 
 		clouds.forEach((cloud, index) => {
 			cloud.update()
 			if (cloud.isOffScreen()) {
-				clouds.splice(index, 1)
-				clouds.push(new Cloud(width))
+				cloud.x = width + imgCloudWidth
 			}
 		})
 
@@ -279,9 +308,10 @@ function draw() {
 			if (random(1) < 0.001)
 				star.update()
 		})
+		if (apple)
+			apple.update()
 	}
-
-
+	
 	// show all assets
 	setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
 
@@ -292,63 +322,67 @@ function draw() {
 		star.show()
 	})
 
-	bird.show()
 	pipes.forEach(pipe => {
 		pipe.show()
 	})
-
+	
 	grounds.forEach(ground => {
 		ground.show()
 	})
-
+	bird.show()
+	if (apple)
+		apple.show()
 	setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
 
-	if (pipeColision(bird, nearestPipe) || yColision(bird)) {
+	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
 	}
-
+	
 	fill(255)
 	textSize(30)
 	text("Score  " + currentPoints, 10, 40)
 	textSize(15)
 	text("Record  " + highestPoints, 10, 70)
+	if (msg) {
 
-	if (!init) {
-		fill(255, 150)
-		textAlign(CENTER)
-		if(mobileDevice){
-			textSize(30)
-			text("Press to start", mobileWidth / 2, height / 2)
-			
-		}else{
-			textSize(30)
-			text("Press \"SPACE\" to start", width / 2, height / 2)
+
+		if (!init) {
+			fill(255, 150)
+			textAlign(CENTER)
+			if (mobileDevice) {
+				textSize(30)
+				text("Press to start", mobileWidth / 2, height / 2)
+
+			} else {
+				textSize(30)
+				text("Press \"SPACE\" to start", width / 2, height / 2)
+			}
+			textAlign(LEFT, BASELINE)
 		}
-		textAlign(LEFT, BASELINE)
-	}
 
 
-	fill(255, 255, 255, 100)
-	if(mobileDevice){
-		textAlign(CENTER)
-		textSize(50)
-		text(gameOverText, mobileWidth/2, height / 2)
-		textSize(9)
-		text(pressEnterMobileText, mobileWidth/2, height / 2 + 40)
-		
-		textSize(50)
-		text(counterText, mobileWidth/2, height / 2)
-		textAlign(LEFT, BASELINE)
-	}else{
-		textAlign(CENTER)
-		textSize(100)
-		text(gameOverText, width/2, height / 2)
-		textSize(17)
-		text(pressEnterText, width/2, height / 2 + 40)
-		
-		textSize(100)
-		text(counterText, width / 2, height / 2)
-		textAlign(LEFT, BASELINE)
+		fill(255, 255, 255, 100)
+		if (mobileDevice) {
+			textAlign(CENTER)
+			textSize(50)
+			text(gameOverText, mobileWidth / 2, height / 2)
+			textSize(9)
+			text(pressEnterMobileText, mobileWidth / 2, height / 2 + 40)
+
+			textSize(50)
+			text(counterText, mobileWidth / 2, height / 2)
+			textAlign(LEFT, BASELINE)
+		} else {
+			textAlign(CENTER)
+			textSize(100)
+			text(gameOverText, width / 2, height / 2)
+			textSize(17)
+			text(pressEnterText, width / 2, height / 2 + 40)
+
+			textSize(100)
+			text(counterText, width / 2, height / 2)
+			textAlign(LEFT, BASELINE)
+		}
 	}
 
 	if (pulse) {
@@ -368,6 +402,10 @@ function yColision(bird) {
 }
 
 function pipeColision(bird, pipe) {
+	if(bird.intangible){
+		return false
+	}
+	// return false
 	if (bird.x > pipe.x &&
 		bird.x < pipe.x + pipeWidth &&
 		(bird.y < pipe.y + birdRadius || bird.y > pipe.y + pipeGap - birdRadius)) {
@@ -386,7 +424,10 @@ function pipeColision(bird, pipe) {
 	]
 
 	for (let i = 0; i < corners.length; i++) {
-		if (dist(bird.x, bird.y, corners[i][0], corners[i][1]) < birdRadius) {
+		// if (dist(bird.x, bird.y, corners[i][0], corners[i][1]) < birdRadius) {
+		if ((bird.x - corners[i][0]) * (bird.x - corners[i][0]) +
+			(bird.y - corners[i][1]) * (bird.y - corners[i][1]) <
+			birdRadius * birdRadius) {
 			return true
 		}
 	}
@@ -396,6 +437,7 @@ function pipeColision(bird, pipe) {
 // function that remove all the pipes, select the 'topNumber' best birds to create 
 function endGame() {
 	gameOver = true
+	msg = true
 	gameOverText = "Game Over"
 	pressEnterText = "Press 'Space' to restart"
 	pressEnterMobileText = "Press to restart"
@@ -410,10 +452,12 @@ function resetGame() {
 	count = 1
 	bird = new Bird()
 	pipes = []
-	pipes.push(new Pipe(width, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+	for (let i = 0; i < 5; i++) {
+		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+	}
 	nearestPipe = pipes[0]
-	secondPipe = null
 	currentPoints = 0
+	apple = null
 	reset = false
 }
 
@@ -443,17 +487,18 @@ function touchStarted(e) {
 			}
 			init = true
 		} else if (gameOver && littleTime) {
+			msg = false
 			pressEnterText = ""
 			pressEnterMobileText = ""
 			gameOver = false
 			littleTime = false
 			push()
-			fill(5, 195, 255, 70)
+			fill(bird.color)
 			textAlign(CENTER)
 			textSize(50)
-			if(mobileDevice){
+			if (mobileDevice) {
 				translate(mobileWidth / 2, height * 0.7)
-			}else{
+			} else {
 				translate(width / 2, height * 0.7)
 			}
 			let rot = random(0.5, 0.8) * PI / 8
@@ -493,12 +538,13 @@ function keyPressed() {
 		// 	paused = !paused
 		// } 
 		else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
+			msg = false
 			pressEnterText = ""
 			pressEnterMobileText = ""
 			gameOver = false
 			littleTime = false
 			push()
-			fill(5, 195, 255, 70)
+			fill(bird.color)
 			textSize(50)
 			textAlign(CENTER)
 			translate(width / 2, height * 0.7)
@@ -519,6 +565,7 @@ function keyPressed() {
 }
 
 countAndPay = function () {
+	msg = false
 	gameOverText = ""
 	gameOver = false
 	starting = true
