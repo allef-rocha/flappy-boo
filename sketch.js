@@ -211,7 +211,7 @@ function setup() {
 	color2 = color(70, 70, 70, 200);
 	color3 = color(10, 10, 40);
 	color4 = color(70, 70, 70);
-        if(!mobileDrvice){
+        if(!mobileDevice){
 	setGradient(fog, 0, 0, width, height+ imgGroundHeight, color1, color2);
 	setGradient(sky, 0, 0, width, height + imgGroundHeight, color3, color4);
 	}
