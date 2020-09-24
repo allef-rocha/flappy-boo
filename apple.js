@@ -16,8 +16,8 @@ function Apple(x){
     this.update = function(){
         angleMode(RADIANS)
         let a = count*0.1
-        this.x_off=15*sin(a*2)
-        this.y_off=40*cos(a/2)
+        this.x_off=20*sin(a)
+        this.y_off=50*cos(a/2)
         this.pos.x -= pipeSpeed
     }
 
