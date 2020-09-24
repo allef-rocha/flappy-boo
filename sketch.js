@@ -211,10 +211,10 @@ function setup() {
 	color2 = color(70, 70, 70, 200);
 	color3 = color(10, 10, 40);
 	color4 = color(70, 70, 70);
-
+        if(!mobileDrvice){
 	setGradient(fog, 0, 0, width, height+ imgGroundHeight, color1, color2);
 	setGradient(sky, 0, 0, width, height + imgGroundHeight, color3, color4);
-	
+	}
 	speedSlider = select('#speedSlider');
 	speedSpan = select('#speed');
 
@@ -337,11 +337,11 @@ function draw() {
 	}
 
 	// show all assets
-        if(mobileDevice)
+        if(mobileDevice){
 	    setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
-	else
+	}else{
             image(sky, 0, 0)
-
+        }
 
 	clouds.forEach((cloud, index) => {
 		cloud.show()
@@ -361,11 +361,11 @@ function draw() {
 	if (apple)
 		apple.show()
 
-	if(mobileDevice)
+	if(mobileDevice){
            setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
-	else
+	}else{
            image(fog, 0, 0)
-
+        }
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
 	}
