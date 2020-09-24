@@ -195,8 +195,8 @@ function setup() {
 
 	if (window.innerWidth < 700 || mobileDevice) {
 		canvas = createCanvas(mobileWidth, height + imgGroundHeight)
-		sky = createGraphics(mobileWidth, height + imgGroundHeight)
-	        fog = createGraphics(mobileWidth, height + imgGroundHeight)
+		//sky = createGraphics(mobileWidth, height + imgGroundHeight)
+	        //fog = createGraphics(mobileWidth, height + imgGroundHeight)
 	
                 birdX = birdMobileX
 	} else {
@@ -337,8 +337,10 @@ function draw() {
 	}
 
 	// show all assets
-	// setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
-	image(sky, 0, 0)
+        if(mobileDevice)
+	    setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
+	else
+            image(sky, 0, 0)
 
 
 	clouds.forEach((cloud, index) => {
@@ -359,8 +361,10 @@ function draw() {
 	if (apple)
 		apple.show()
 
-	// setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
-	image(fog, 0, 0)
+	if(mobileDevice)
+           setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
+	else
+           image(fog, 0, 0)
 
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
@@ -491,7 +495,7 @@ function resetGame() {
 
 function setGradient(cvs, x, y, w, h, c1, c2) {
 	cvs.noFill();
-	let strWeight = 2
+	let strWeight = mobileDevice ? 12 : 2
 	cvs.strokeWeight(strWeight)
 	for (let i = y; i <= y + h; i += strWeight) {
 		var inter = map(i, y, y + h, 0, 1);
