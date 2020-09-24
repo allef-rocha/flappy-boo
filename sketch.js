@@ -270,6 +270,7 @@ function draw() {
 			counterText = ""
 			starting = false
 			i = 3
+			msg = false
 		}
 	} else {
 		//if (count % 1080 == 0) {
@@ -446,6 +447,7 @@ function yColision(bird) {
 }
 
 function pipeColision(bird, pipe) {
+	// return false
 	if (bird.intangible) {
 		return false
 	}
@@ -609,7 +611,7 @@ function keyPressed() {
 }
 
 countAndPay = function () {
-	msg = false
+	msg = true
 	gameOverText = ""
 	gameOver = false
 	starting = true
