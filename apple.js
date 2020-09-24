@@ -12,8 +12,8 @@ function Apple(x){
     }
 
     this.update = function(){
-        this.pos.x+=50*sin(count/6)
-        this.pos.y+=50*cos(count/6)
+        this.pos.x+=5*sin(count/60)
+        this.pos.y+=50*cos(count/60)
         this.pos.x -= pipeSpeed
     }
 
