@@ -195,13 +195,17 @@ function setup() {
 
 	if (window.innerWidth < 700 || mobileDevice) {
 		canvas = createCanvas(mobileWidth, height + imgGroundHeight)
-		birdX = birdMobileX
+		sky = createGraphics(mobileWidth, height + imgGroundHeight)
+	        fog = createGraphics(mobileWidth, height + imgGroundHeight)
+	
+                birdX = birdMobileX
 	} else {
 		canvas = createCanvas(width, height + imgGroundHeight)
+                sky = createGraphics(width, height + imgGroundHeight)
+	        fog = createGraphics(width, height + imgGroundHeight)
+	
 	}
 	canvas.parent('gameContainer')
-	sky = createGraphics(width, height + imgGroundHeight)
-	fog = createGraphics(width, height + imgGroundHeight)
 	
 	color1 = color(10, 10, 40, 0);
 	color2 = color(70, 70, 70, 200);
