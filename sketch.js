@@ -370,7 +370,7 @@ function draw() {
            background(70, 70, 70, darkness)
 	//}else{
         //   image(fog, 0, 0)
-        }
+        //}
 
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
