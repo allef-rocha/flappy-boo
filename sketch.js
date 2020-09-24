@@ -340,11 +340,11 @@ function draw() {
 	}
 
 	// show all assets
-        if(mobileDevice){
-	    //setGradient(canvas,0, 0, width, height + imgGroundHeight, color3, color4);
-	}else{
-            image(sky, 0, 0)
-        }
+        //if(mobileDevice){
+	//    setGradient(canvas,0, 0, width, height + imgGroundHeight, color3, color4);
+	//}else{
+        //    image(sky, 0, 0)
+        //}
 
 	clouds.forEach((cloud, index) => {
 		cloud.show()
@@ -365,11 +365,11 @@ function draw() {
         if (apple)
 		apple.show()
 
-	if(mobileDevice){
-           //setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
+	//if(mobileDevice){
+        //   setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
            background(70, 70, 70, darkness)
-	}else{
-           image(fog, 0, 0)
+	//}else{
+        //   image(fog, 0, 0)
         }
 
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
@@ -441,7 +441,7 @@ function yColision(bird) {
 }
 
 function pipeColision(bird, pipe) {
-	if (true || bird.intangible) {
+	if (bird.intangible) {
 		return false
 	}
 	// return false
