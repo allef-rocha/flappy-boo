@@ -272,7 +272,7 @@ function draw() {
 			i = 3
 		}
 	} else {
-		if (count % 1080 == 0) {
+		if (count % 480 == 0) {
 			apple = new Apple(nearestPipe.x + pipeDistPixels * 5 - pipeDistPixels / 2 + pipeWidth / 2)
 		}
 		if (apple && apple.eaten(bird)) {
