@@ -127,7 +127,8 @@ let canvas
 let sky
 let fog
 
-
+let darkness = 140
+let increment = 1
 
 function preload() {
 	groundImg = loadImage('assets/ground.png')
@@ -283,6 +284,8 @@ function draw() {
 			nearestPipe.notColided = true
 			let nextIndex = pipes.indexOf(nearestPipe) + 1 >= pipes.length ? 0 : pipes.indexOf(nearestPipe) + 1
 			nearestPipe = pipes[nextIndex]
+                        darkness += increment
+                        if(darkness > 199 || darkness < 140) increment *=-1
 			if (++currentPoints > highestPoints) {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
@@ -363,7 +366,7 @@ function draw() {
 
 	if(mobileDevice){
            //setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
-           background(70, 70, 70, 130)
+           background(70, 70, 70, darkness)
 	}else{
            image(fog, 0, 0)
         }
