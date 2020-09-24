@@ -338,7 +338,7 @@ function draw() {
 
 	// show all assets
         if(mobileDevice){
-	    setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
+	    setGradient(canvas,0, 0, width, height + imgGroundHeight, color3, color4);
 	}else{
             image(sky, 0, 0)
         }
@@ -362,7 +362,7 @@ function draw() {
 		apple.show()
 
 	if(mobileDevice){
-           setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
+           setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
 	}else{
            image(fog, 0, 0)
         }
