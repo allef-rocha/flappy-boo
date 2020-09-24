@@ -127,7 +127,7 @@ let canvas
 let sky
 let fog
 
-let darkness = 180
+let darkness = 150
 let increment = 1
 
 function preload() {
