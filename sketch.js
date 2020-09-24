@@ -439,7 +439,7 @@ function yColision(bird) {
 }
 
 function pipeColision(bird, pipe) {
-	if (bird.intangible) {
+	if (bird.intangible||true) {
 		return false
 	}
 	// return false
