@@ -357,12 +357,14 @@ function draw() {
 		pipe.show()
 	})
 
+        if (apple)
+		apple.show()
+
 	grounds.forEach(ground => {
 		ground.show()
 	})
 	bird.show()
-	if (apple)
-		apple.show()
+	
 
 	if(mobileDevice){
            //setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
