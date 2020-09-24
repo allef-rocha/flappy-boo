@@ -12,8 +12,8 @@ function Apple(x){
     }
 
     this.update = function(){
-        let a = map(count%60,0,59,-PI,PI)
-        this.pos.x+=4*sin(2*a)
+        let a = map(count%60,0,59,-HALF_PI,HALF_PI)
+        this.pos.x+=4*sin(5*a)
         this.pos.y+=10*cos(a)
         this.pos.x -= pipeSpeed
     }
