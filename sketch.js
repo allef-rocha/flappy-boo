@@ -4,15 +4,15 @@ const mobileWidth = 372
 
 const colors = [
 	"#C97A15",
-	"#119B28",	
-	"#67119B",	
-	"#DCD925",	
-	"#AE1313",	
-	"#DADADA",	
-	"#36CABE",	
-	"#DF4AC6",	
-	"#21247B",	
-	"#000000",	
+	"#119B28",
+	"#67119B",
+	"#DCD925",
+	"#AE1313",
+	"#DADADA",
+	"#36CABE",
+	"#DF4AC6",
+	"#21247B",
+	"#000000",
 ]
 
 const phrases = [
@@ -123,6 +123,11 @@ let mobileDevice = false
 let msg = true
 
 let apple = null
+let canvas
+let sky
+let fog
+
+
 
 function preload() {
 	groundImg = loadImage('assets/ground.png')
@@ -168,16 +173,26 @@ function isMobile() {
 	return detectMob() || window.mobileAndTabletCheck()
 }
 
+function transparence(img, val){
+	img.loadPixels()
+	// console.log(img.pixels[0])
+	for(let i = 3 ; i < img.pixels.length; i+=4){
+		img.pixels[i] = img.pixels[i] === 0 ? 0 : val
+	}
+	img.updatePixels()
+	return img
+}
+
 function setup() {
 	mobileDevice = isMobile()
 	noLoop()
 
 	for (i = 0; i < numGhostImgs; i++) {
 		ghostImgsTint[i] = []
-		ghostImgsTint[i] = ghostImgs[i].map((img) => img.tint(img, 255, 255, 255, 150))
+		ghostImgsTint[i][0] = transparence(ghostImgs[i][0], 125)
+		ghostImgsTint[i][1] = transparence(ghostImgs[i][1], 125)
 	}
 
-	let canvas
 	if (window.innerWidth < 700 || mobileDevice) {
 		canvas = createCanvas(mobileWidth, height + imgGroundHeight)
 		birdX = birdMobileX
@@ -185,12 +200,17 @@ function setup() {
 		canvas = createCanvas(width, height + imgGroundHeight)
 	}
 	canvas.parent('gameContainer')
-
+	sky = createGraphics(width, height + imgGroundHeight)
+	fog = createGraphics(width, height + imgGroundHeight)
+	
 	color1 = color(10, 10, 40, 0);
-	color2 = color(70, 70, 70, 220);
+	color2 = color(70, 70, 70, 200);
 	color3 = color(10, 10, 40);
 	color4 = color(70, 70, 70);
 
+	setGradient(fog, 0, 0, width, height+ imgGroundHeight, color1, color2);
+	setGradient(sky, 0, 0, width, height + imgGroundHeight, color3, color4);
+	
 	speedSlider = select('#speedSlider');
 	speedSpan = select('#speed');
 
@@ -226,7 +246,7 @@ function setup() {
 
 	i = 3
 	background(0)
-	
+
 
 }
 
@@ -247,10 +267,10 @@ function draw() {
 			i = 3
 		}
 	} else {
-		if(count % 1080 == 0){
-			apple = new Apple(nearestPipe.x + pipeDistPixels*5 - pipeDistPixels/2 + pipeWidth/2)
+		if (count % 1080 == 0) {
+			apple = new Apple(nearestPipe.x + pipeDistPixels * 5 - pipeDistPixels / 2 + pipeWidth / 2)
 		}
-		if(apple && apple.eaten(bird)){
+		if (apple && apple.eaten(bird)) {
 			apple = null
 			bird.powerUp()
 		}
@@ -277,7 +297,7 @@ function draw() {
 			pipe.update()
 			if (pipe.x < -pipeWidth - 5) {
 				pipe.x = pipes.length * pipeDistPixels - pipeWidth - 5
-				pipe.y = random(1, height-1-pipeGap)
+				pipe.y = random(1, height - 1 - pipeGap)
 			}
 		})
 
@@ -311,9 +331,11 @@ function draw() {
 		if (apple)
 			apple.update()
 	}
-	
+
 	// show all assets
-	setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
+	// setGradient(0, 0, width, height + imgGroundHeight, color3, color4);
+	image(sky, 0, 0)
+
 
 	clouds.forEach((cloud, index) => {
 		cloud.show()
@@ -325,19 +347,21 @@ function draw() {
 	pipes.forEach(pipe => {
 		pipe.show()
 	})
-	
+
 	grounds.forEach(ground => {
 		ground.show()
 	})
 	bird.show()
 	if (apple)
 		apple.show()
-	setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
+
+	// setGradient(0, 0, width, height + imgGroundHeight, color1, color2);
+	image(fog, 0, 0)
 
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
 	}
-	
+
 	fill(255)
 	textSize(30)
 	text("Score  " + currentPoints, 10, 40)
@@ -402,7 +426,7 @@ function yColision(bird) {
 }
 
 function pipeColision(bird, pipe) {
-	if(bird.intangible){
+	if (bird.intangible) {
 		return false
 	}
 	// return false
@@ -461,17 +485,17 @@ function resetGame() {
 	reset = false
 }
 
-function setGradient(x, y, w, h, c1, c2) {
-	noFill();
-	let strWeight = 12
-	strokeWeight(strWeight)
+function setGradient(cvs, x, y, w, h, c1, c2) {
+	cvs.noFill();
+	let strWeight = 2
+	cvs.strokeWeight(strWeight)
 	for (let i = y; i <= y + h; i += strWeight) {
 		var inter = map(i, y, y + h, 0, 1);
 		var c = lerpColor(c1, c2, inter);
-		stroke(c);
-		line(x, i, x + w, i);
+		cvs.stroke(c);
+		cvs.line(x, i, x + w, i);
 	}
-	strokeWeight(1)
+	cvs.strokeWeight(1)
 }
 
 function touchStarted(e) {
@@ -503,7 +527,7 @@ function touchStarted(e) {
 			}
 			let rot = random(0.5, 0.8) * PI / 8
 			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
-			text("Gooo!", 0, 0)
+			text("Go!", 0, 0)
 			textAlign(LEFT, BASELINE)
 			pop()
 
@@ -550,7 +574,7 @@ function keyPressed() {
 			translate(width / 2, height * 0.7)
 			let rot = random(0.5, 1) * PI / 8
 			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
-			text("Gooo!", 0, 0)
+			text("Go!", 0, 0)
 			textAlign(LEFT, BASELINE)
 			pop()
 

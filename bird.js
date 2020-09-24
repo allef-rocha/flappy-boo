@@ -22,29 +22,42 @@ function Bird() {
         noFill()
         //tint(255,100)
         // if (!mobileDevice && !stage!=1) {
-        if (!stage!=1) {
+        if (stage == 1) {
             imageMode(CENTER)
             if (this.velocity > 0 || this.onTheGround) {
-                image(this.image[0], this.x, this.y, this.r * 2, this.r * 2)
+                image(this.image[0], this.x, this.y)
             } else {
                 image(this.image[1], this.x, this.y)
             }
             // noTint()
             imageMode(CORNER)
-        } else {
+        } else if (stage == 2){
+            noFill()
+            stroke(255)
+            strokeWeight(2)
+            ellipse(this.x, this.y, this.r * 2)
+            line(this.x + 5, this.y + 13, this.x + 17, this.y + 13)
+            if (this.velocity > 0 || this.onTheGround) {
+                ellipse(this.x + 5, this.y, 15)
+                ellipse(this.x + 20, this.y + 1, 10, 12)
+            } else {
+                line(this.x, this.y, this.x + 12.5, this.y)
+                line(this.x + 15, this.y, this.x + 25, this.y)
+            }
+        }else if(stage == 0){
             fill(this.color)
             stroke(255)
             ellipse(this.x, this.y, this.r * 2)
-            line(this.x+5, this.y+13, this.x+17, this.y+13)
+            line(this.x + 5, this.y + 13, this.x + 17, this.y + 13)
             if (this.velocity > 0 || this.onTheGround) {
-                fill(255, 125)
-                ellipse(this.x+5, this.y, 15)
-                ellipse(this.x+20, this.y+1, 10, 12)
+                fill(117, 192, 255, 125)
+                ellipse(this.x + 5, this.y, 15)
+                ellipse(this.x + 20, this.y + 1, 10, 12)
             } else {
-                line(this.x, this.y, this.x+12.5, this.y)
-                line(this.x+15, this.y, this.x+25, this.y)
+                line(this.x, this.y, this.x + 12.5, this.y)
+                line(this.x + 15, this.y, this.x + 25, this.y)
             }
-            
+
             noStroke()
             noFill()
             noStroke()
@@ -54,15 +67,16 @@ function Bird() {
             stroke(255, 0, 0)
             ellipse(this.x, this.y, this.r * 2)
         }
+        noStroke()
     }
     this.update = function () {
-        if(this.intangible){
+        if (this.intangible) {
             this.clock++
-            if(this.clock > powerTime){
+            if (this.clock > powerTime) {
                 this.toNormal()
-            }else if(this.clock > powerTime / 2){
-                if(count % 25 === 0){
-                    stage = stage === 0 ? 1 : 0
+            } else if (this.clock > powerTime / 2) {
+                if (count % 25 === 0) {
+                    stage = stage === 1 ? 2 : 1
                 }
             }
         }
@@ -86,13 +100,13 @@ function Bird() {
         this.velocity = -jumpSize
     }
 
-    this.powerUp = function(){
+    this.powerUp = function () {
         this.intangible = true
         this.clock = 0
         stage = 1
     }
-    
-    this.toNormal = function(){
+
+    this.toNormal = function () {
         this.intangible = false
         this.clock = 0
         stage = 0
