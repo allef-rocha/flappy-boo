@@ -362,8 +362,7 @@ function draw() {
 	})
 	bird.show()
 	
-        if (apple)
-		apple.show()
+
 
 	if(mobileDevice){
            //setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
@@ -371,13 +370,16 @@ function draw() {
 	}else{
            image(fog, 0, 0)
         }
+
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
 	}
+         if (apple)
+		apple.show()
 
 	fill(255)
 	textSize(30)
-	text("Score  " + currentPoints, 10, 40)
+	text("Score  " + currentPoints,10, 40)
 	textSize(15)
 	text("Record  " + highestPoints, 10, 70)
 	if (msg) {
