@@ -12,7 +12,7 @@ function Apple(x){
     }
 
     this.update = function(){
-        this.pos.x+=sin(count/360)
+        this.pos.x+=sin(6*count/360)
         this.pos.y+=cos(count/360)
         this.pos.x -= pipeSpeed
     }
