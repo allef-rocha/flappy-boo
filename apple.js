@@ -1,5 +1,5 @@
 function Apple(x){
-    this.r = 30
+    this.r = 25
     this.pos = createVector(x, random(this.r, height - this.r))
 
 
@@ -11,6 +11,9 @@ function Apple(x){
     }
 
     this.update = function(){
+        let a = map(count%60,0,59,-PI,PI)
+        this.pos.x+=3*sin(a)
+        this.pos.y+=3*cos(a)
         this.pos.x -= pipeSpeed
     }
 
