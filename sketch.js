@@ -127,7 +127,7 @@ let canvas
 let sky
 let fog
 
-let darkness = 140
+let darkness = 180
 let increment = 1
 
 function preload() {
@@ -285,7 +285,7 @@ function draw() {
 			let nextIndex = pipes.indexOf(nearestPipe) + 1 >= pipes.length ? 0 : pipes.indexOf(nearestPipe) + 1
 			nearestPipe = pipes[nextIndex]
                         darkness += increment
-                        if(darkness > 199 || darkness < 140) increment *=-1
+                        if(darkness > 210 || darkness < 140) increment *=-1
 			if (++currentPoints > highestPoints) {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
