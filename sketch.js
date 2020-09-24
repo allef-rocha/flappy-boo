@@ -362,7 +362,8 @@ function draw() {
 	})
 	bird.show()
 	
-
+        if (apple)
+		apple.show()
 
 	if(mobileDevice){
            //setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
@@ -374,8 +375,7 @@ function draw() {
 	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
 		endGame()
 	}
-         if (apple)
-		apple.show()
+         
 
 	fill(255)
 	textSize(30)
