@@ -7,6 +7,7 @@ function Apple(x){
         fill(158, 20, 20, 255)
         stroke(255)
         ellipse(this.pos.x, this.pos.y, this.r)
+        noStroke()
     }
 
     this.update = function(){
