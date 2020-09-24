@@ -272,9 +272,9 @@ function draw() {
 			i = 3
 		}
 	} else {
-		if (count % 1080 == 0) {
-			apple = new Apple(nearestPipe.x + pipeDistPixels * 5 - pipeDistPixels / 2 + pipeWidth / 2)
-		}
+		//if (count % 1080 == 0) {
+		//	apple = new Apple(nearestPipe.x + pipeDistPixels * 5 - pipeDistPixels / 2 + pipeWidth / 2)
+		//}
 		if (apple && apple.eaten(bird)) {
 			apple = null
 			bird.powerUp()
@@ -290,6 +290,11 @@ function draw() {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
 			}
+                        if(currentPoint%12==0){
+                            let plus = min(floor(currentPoints/24),6)
+                            apple = new Apple(nearestPipe.x + pipeDistPixels * (4+plus) - pipeDistPixels / 2 + pipeWidth / 2)
+
+                        }
 		}
 
 		//check colision and update the bird
