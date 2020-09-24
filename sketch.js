@@ -363,7 +363,7 @@ function draw() {
 
 	if(mobileDevice){
            //setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
-           background(70, 70, 70, 90)
+           background(70, 70, 70, 130)
 	}else{
            image(fog, 0, 0)
         }
