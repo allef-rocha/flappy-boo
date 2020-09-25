@@ -79,6 +79,7 @@ let pipes = []
 let clouds = []
 let stars = []
 let nearestPipe
+let bones = []
 
 let count = 0
 let lastCount = 0
@@ -210,6 +211,7 @@ function setup() {
 
 	for (let i = 0; i < 5; i++) {
 		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+		bones.push(new Bone(i * pipeDistPixels * random(0.5, 1.5)))
 	}
 	nearestPipe = pipes[0]
 
@@ -294,6 +296,9 @@ function draw() {
 			if (random(1) < 0.001)
 				star.update()
 		})
+		bones.forEach(bone => {
+			bone.update()
+		})
 		if (apple)
 			apple.update()
 	}
@@ -315,16 +320,20 @@ function draw() {
 		apple.show()
 
 	noFill()
-	let groundStroke = 15
+	let groundStroke = 10
 	noStroke()
-	fill(129,81,47)
-	rect(-groundStroke,height,width,height+groundHeight)
-	stroke(0,155)
+	fill(129, 81, 47)
+	rect(-groundStroke / 2, height, width + groundStroke, height + groundHeight)
+	stroke(0, 155)
 	strokeWeight(groundStroke)
-	rect(-groundStroke,height+groundStroke/2-2,width,height+groundHeight)
+	rect(-groundStroke / 2, height + groundStroke / 2 - 2, width + groundStroke, height + groundHeight)
 	strokeWeight(1)
 	noStroke()
 
+	bones.forEach(bone => {
+		// bone.update()
+		bone.show()
+	})
 
 	background(70, 70, 70, darkness)
 
@@ -447,8 +456,10 @@ function resetGame() {
 	count = 1
 	bird = new Bird()
 	pipes = []
+	bones = []
 	for (let i = 0; i < 5; i++) {
 		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
+		bones.push(new Bone(i * pipeDistPixels * random(0.5, 1.5)))
 	}
 	nearestPipe = pipes[0]
 	currentPoints = 0
