@@ -74,7 +74,7 @@ function Bird() {
             this.clock++
             if (this.clock > powerTime) {
                 this.toNormal()
-            } else if (this.clock > powerTime * 0.75) {
+            } else if (this.clock > powerTime / 2) {
                 if (count % 25 === 0) {
                     stage = stage === 1 ? 2 : 1
                 }
