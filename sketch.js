@@ -24,8 +24,7 @@ const phrases = [
 	"   Boooo",
 ]
 
-const imgGroundHeight = 50
-const imgGroundWidth = 1300
+const groundHeight = 50
 const imgPipeHeight = 550
 const imgPipeWidth = 550
 const imgCloudWidth = 100
@@ -77,7 +76,6 @@ let score
 
 let bird
 let pipes = []
-let grounds = []
 let clouds = []
 let stars = []
 let nearestPipe
@@ -91,7 +89,6 @@ let highestPoints = 0
 let pScore
 let pHighScore
 
-let groundImg
 let pipeTopImg
 let pipeBtmImg
 let cloudImg
@@ -131,7 +128,6 @@ let darkness = 150
 let increment = 1
 
 function preload() {
-	groundImg = loadImage('assets/ground.png')
 	pipeTopImg = loadImage('assets/pipe_top.png')
 	pipeBtmImg = loadImage('assets/pipe_bottom.png')
 	cloudImg = loadImage('assets/cloud.png')
@@ -174,10 +170,9 @@ function isMobile() {
 	return detectMob() || window.mobileAndTabletCheck()
 }
 
-function transparence(img, val){
+function transparence(img, val) {
 	img.loadPixels()
-	// console.log(img.pixels[0])
-	for(let i = 3 ; i < img.pixels.length; i+=4){
+	for (let i = 3; i < img.pixels.length; i += 4) {
 		img.pixels[i] = img.pixels[i] === 0 ? 0 : val
 	}
 	img.updatePixels()
@@ -195,27 +190,18 @@ function setup() {
 	}
 
 	if (window.innerWidth < 700 || mobileDevice) {
-		canvas = createCanvas(mobileWidth, height + imgGroundHeight)
-		//sky = createGraphics(mobileWidth, height + imgGroundHeight)
-	        //fog = createGraphics(mobileWidth, height + imgGroundHeight)
-	
-                birdX = birdMobileX
+		canvas = createCanvas(mobileWidth, height + groundHeight)
+
+		birdX = birdMobileX
 	} else {
-		canvas = createCanvas(width, height + imgGroundHeight)
-                sky = createGraphics(width, height + imgGroundHeight)
-	        fog = createGraphics(width, height + imgGroundHeight)
-	
+		canvas = createCanvas(width, height + groundHeight)
 	}
 	canvas.parent('gameContainer')
-	
+
 	color1 = color(10, 10, 40, 0);
 	color2 = color(70, 70, 70, 200);
 	color3 = color(10, 10, 40);
 	color4 = color(70, 70, 70);
-        if(!mobileDevice){
-	setGradient(fog, 0, 0, width, height+ imgGroundHeight, color1, color2);
-	setGradient(sky, 0, 0, width, height + imgGroundHeight, color3, color4);
-	}
 	speedSlider = select('#speedSlider');
 	speedSpan = select('#speed');
 
@@ -226,14 +212,6 @@ function setup() {
 		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
 	}
 	nearestPipe = pipes[0]
-
-
-
-	grounds.push(new Ground(0, height, imgGroundWidth, imgGroundHeight))
-
-	while (grounds[grounds.length - 1].x < width) {
-		grounds.push(new Ground(grounds[grounds.length - 1].x + imgGroundWidth, height, imgGroundWidth, imgGroundHeight))
-	}
 
 	for (let i = 0; i < 4; i++) {
 		clouds.push(new Cloud())
@@ -251,12 +229,9 @@ function setup() {
 
 	i = 3
 	background(0)
-
-
 }
 
 function draw() {
-	// frameRate(50)
 	background(10, 10, 40)
 	count++
 
@@ -273,9 +248,6 @@ function draw() {
 			msg = false
 		}
 	} else {
-		//if (count % 1080 == 0) {
-		//	apple = new Apple(nearestPipe.x + pipeDistPixels * 5 - pipeDistPixels / 2 + pipeWidth / 2)
-		//}
 		if (apple && apple.eaten(bird)) {
 			apple = null
 			bird.powerUp()
@@ -285,27 +257,23 @@ function draw() {
 			nearestPipe.notColided = true
 			let nextIndex = pipes.indexOf(nearestPipe) + 1 >= pipes.length ? 0 : pipes.indexOf(nearestPipe) + 1
 			nearestPipe = pipes[nextIndex]
-                        darkness += increment
-                        if(darkness > 210 || darkness < 140) increment *=-1
+			darkness += increment
+			if (darkness > 210 || darkness < 140) increment *= -1
 			if (++currentPoints > highestPoints) {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
 			}
-                        if(currentPoints%12==0){
-                            let plus = min(floor(currentPoints/24),6)
-                            apple = new Apple(nearestPipe.x + pipeDistPixels * (4+plus) - pipeDistPixels / 2 + pipeWidth / 2)
+			if (currentPoints % 12 == 0) {
+				let plus = min(floor(currentPoints / 24), 6)
+				apple = new Apple(nearestPipe.x + pipeDistPixels * (4 + plus) - pipeDistPixels / 2 + pipeWidth / 2)
 
-                        }
+			}
 		}
 
 		//check colision and update the bird
 		bird.update()
 
-
 		//update the pipes and remove if pipe is off-screen
-		// pipes.forEach(pipe => {
-		// 	pipe.update()
-		// })
 		pipes.forEach((pipe, index) => {
 			pipe.update()
 			if (pipe.x < -pipeWidth - 5) {
@@ -314,21 +282,6 @@ function draw() {
 			}
 		})
 
-		// add a new pipe each 'pipeDist' frames
-		// if (count % pipesDist == 0) {
-
-		// 	pipes.push(new Pipe(width, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
-
-		// }
-
-		grounds.forEach((ground, index) => {
-			ground.update()
-			if (ground.isOffScreen()) {
-				ground.x = (grounds.length - 1) * imgGroundWidth
-				// grounds.splice(index, 1)
-				// grounds.push(new Ground(grounds[grounds.length - 1].x + imgGroundWidth, height, imgGroundWidth, imgGroundHeight))
-			}
-		})
 
 		clouds.forEach((cloud, index) => {
 			cloud.update()
@@ -345,13 +298,6 @@ function draw() {
 			apple.update()
 	}
 
-	// show all assets
-        //if(mobileDevice){
-	//    setGradient(canvas,0, 0, width, height + imgGroundHeight, color3, color4);
-	//}else{
-        //    image(sky, 0, 0)
-        //}
-
 	clouds.forEach((cloud, index) => {
 		cloud.show()
 	})
@@ -363,29 +309,33 @@ function draw() {
 		pipe.show()
 	})
 
-	grounds.forEach(ground => {
-		ground.show()
-	})
 	bird.show()
-	
-        if (apple)
+
+	if (apple)
 		apple.show()
 
-	//if(mobileDevice){
-        //   setGradient(canvas,0, 0, width, height + imgGroundHeight, color1, color2);
-           background(70, 70, 70, darkness)
-	//}else{
-        //   image(fog, 0, 0)
-        //}
+	noFill()
+	let groundStroke = 15
+	noStroke()
+	fill(129,81,47)
+	rect(-groundStroke,height,width,height+groundHeight)
+	stroke(0,155)
+	strokeWeight(groundStroke)
+	rect(-groundStroke,height+groundStroke/2-2,width,height+groundHeight)
+	strokeWeight(1)
+	noStroke()
 
-	if (pipeColision(bird, nearestPipe)) { // || yColision(bird)) {
+
+	background(70, 70, 70, darkness)
+
+	if (pipeColision(bird, nearestPipe)) {
 		endGame()
 	}
-         
+
 
 	fill(255)
 	textSize(30)
-	text("Score  " + currentPoints,10, 40)
+	text("Score  " + currentPoints, 10, 40)
 	textSize(15)
 	text("Record  " + highestPoints, 10, 70)
 	if (msg) {
@@ -404,7 +354,6 @@ function draw() {
 			}
 			textAlign(LEFT, BASELINE)
 		}
-
 
 		fill(255, 255, 255, 100)
 		if (mobileDevice) {
