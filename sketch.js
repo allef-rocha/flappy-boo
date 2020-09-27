@@ -197,7 +197,7 @@ function setup() {
 		let h1 = document.querySelector('h1')
 		h1.style.display = 'none'
 		mobileWidth = min(window.innerWidth, width)
-		height = min(window.innerHeight - groundHeight, imgPipeHeight)
+		height = min(window.innerHeight - groundHeight, imgPipeHeight + pipeGap - groundStroke)
 		canvas = createCanvas(mobileWidth, height + groundHeight)
 		birdX = birdMobileX
 	} else {
@@ -514,11 +514,11 @@ function setGradient(x, y, w, h, c1, c2) {
 function touchStarted(e) {
 	e.preventDefault()
 	let x, y
-	if(e.touches){
+	if (e.touches) {
 		x = e.touches[0].clientX
 		y = e.touches[0].clientY
 	}
-	if (x > 300 && y < 60 &&mobileDevice && init && !starting) {
+	if (x > 300 && y < 60 && mobileDevice && init && !starting) {
 		if (paused) {
 			paused = false
 			countAndPlay(false)
@@ -526,7 +526,7 @@ function touchStarted(e) {
 			paused = true
 			noLoop()
 		}
-	}else if (!starting) {
+	} else if (!starting) {
 		if (!gameOver) {
 			bird.jump()
 			if (!paused && !init) {
