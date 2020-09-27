@@ -53,19 +53,22 @@ function Bird() {
             ellipse(this.x, this.y, this.r * 2)
             if(this.dead){
                 fill(117, 192, 255, 125)
-                ellipse(this.x + 5, this.y, 15)
-                ellipse(this.x + 20, this.y + 1, 10, 12)
+                arc(this.x + 5, this.y, 15, 15, -HALF_PI+0.9, PI, CHORD)
+                arc(this.x + 20, this.y + 1, 10, 12,0, -HALF_PI-0.7, CHORD)
                 noFill()
                 arc(this.x+11,this.y+17,15,10,PI+0.4,-0.4,OPEN)   
             }
             else{
-                noFill()
-                arc(this.x+11,this.y+11,15,10,0.2,PI-0.2,CHORD)
                 if (this.velocity > 0 || this.onTheGround) {
+                    fill("#eee")
+                    arc(this.x+11,this.y+11,15,10,0.2,PI-0.2,CHORD)
                     fill(117, 192, 255, 125)
                     ellipse(this.x + 5, this.y, 15)
                     ellipse(this.x + 20, this.y + 1, 10, 12)
                 } else {
+                    fill("#eee")
+                    arc(this.x+11,this.y+11,15,13,0.2,PI-0.2,CHORD)
+                    noFill()
                     arc(this.x+6, this.y+1, 12, 8, -PI, PI)
                     arc(this.x+20, this.y+1, 9, 6, PI, -PI)
                 }
