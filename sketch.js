@@ -344,14 +344,16 @@ pipes.forEach(pipe => {
 })
 
 
-bird.show()
 
 
-background(70, 70, 70, darkness)
 
 if (pipeColision(bird, nearestPipe)) {
+	bird.dead = true
 	endGame()
 }
+bird.show()
+
+background(70, 70, 70, darkness)
 
 fill(255)
 textSize(30)
