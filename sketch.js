@@ -1,6 +1,6 @@
 const width = 1000
-const height = 550
-const mobileWidth = 372
+let height = 550
+let mobileWidth = 372
 
 const colors = [
 	"#C97A15",
@@ -57,7 +57,7 @@ const PLAY = 1
 
 let i = 3
 
-let paused = true
+let paused = false
 
 let gameMode
 
@@ -194,8 +194,11 @@ function setup() {
 	}
 
 	if (window.innerWidth < 700 || mobileDevice) {
+		let h1 = document.querySelector('h1')
+		h1.style.display = 'none'
+		mobileWidth = min(window.innerWidth, width)
+		height = min(window.innerHeight - groundHeight, imgPipeHeight)
 		canvas = createCanvas(mobileWidth, height + groundHeight)
-
 		birdX = birdMobileX
 	} else {
 		canvas = createCanvas(width, height + groundHeight)
@@ -248,9 +251,9 @@ function draw() {
 		}
 		if (i < 1) {
 			counterText = ""
-			starting = false
 			i = 3
 			msg = false
+			starting = false
 		}
 	} else {
 		if (apple && apple.eaten(bird)) {
@@ -265,7 +268,7 @@ function draw() {
 			let nextIndex = pipes.indexOf(nearestPipe) + 1 >= pipes.length ? 0 : pipes.indexOf(nearestPipe) + 1
 			nearestPipe = pipes[nextIndex]
 			darkness += increment
-			if (darkness > 210 || darkness < 140) increment *= -1
+			if (darkness > 196 || darkness < 140) increment *= -1
 			if (++currentPoints > highestPoints) {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
@@ -393,6 +396,20 @@ function draw() {
 			textAlign(LEFT, BASELINE)
 		}
 	}
+	if (mobileDevice && init && !starting) {
+		fill(255, 200)
+		noStroke()
+		if (!paused) {
+			rect(mobileWidth - 50, 20, 10, 40)
+			rect(mobileWidth - 30, 20, 10, 40)
+		} else {
+			beginShape()
+			vertex(mobileWidth - 50, 20)
+			vertex(mobileWidth - 20, 40)
+			vertex(mobileWidth - 50, 60)
+			endShape(CLOSE)
+		}
+	}
 
 	if (pulse) {
 		noLoop()
@@ -400,9 +417,10 @@ function draw() {
 	}
 	if (paused && init && !starting) {
 		textAlign(CENTER)
-		fill(255,200)
+		fill(255, 200)
 		textSize(40)
-		text("Paused", width / 2, height / 2)
+		let w = mobileDevice ? mobileWidth : width
+		text("Paused", w / 2, height / 2)
 	}
 }
 
@@ -495,12 +513,24 @@ function setGradient(x, y, w, h, c1, c2) {
 
 function touchStarted(e) {
 	e.preventDefault()
-	if (!starting) {
+	let x, y
+	if(e.touches){
+		x = e.touches[0].clientX
+		y = e.touches[0].clientY
+	}
+	if (x > 300 && y < 60 &&mobileDevice && init && !starting) {
+		if (paused) {
+			paused = false
+			countAndPlay(false)
+		} else {
+			paused = true
+			noLoop()
+		}
+	}else if (!starting) {
 		if (!gameOver) {
 			bird.jump()
-			if (paused) {
+			if (!paused && !init) {
 				countAndPlay()
-				paused = false
 			}
 			init = true
 		} else if (gameOver && littleTime) {
@@ -538,9 +568,8 @@ function keyPressed() {
 	if (!starting) {
 		if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && !gameOver) {
 			bird.jump()
-			if (paused) {
+			if (!paused && !init) {
 				countAndPlay()
-				paused = false
 			}
 			init = true
 		} else if (keyCode === BACKSPACE && !gameOver && init) {
@@ -583,7 +612,7 @@ countAndPlay = function (willJump = true) {
 	gameOverText = ""
 	gameOver = false
 	starting = true
-	pause = false
+	paused = false
 	count = 1
 	loop()
 	if (willJump) bird.jump()
