@@ -197,7 +197,7 @@ function setup() {
 		let h1 = document.querySelector('h1')
 		h1.style.display = 'none'
 		mobileWidth = min(window.innerWidth, width)
-		height = min(window.innerHeight - groundHeight, imgPipeHeight + pipeGap - groundStroke)
+		height = min(window.innerHeight - groundHeight, imgPipeHeight + pipeGap)
 		canvas = createCanvas(mobileWidth, height + groundHeight)
 		birdX = birdMobileX
 	} else {

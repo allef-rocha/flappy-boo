@@ -8,7 +8,14 @@ function Apple(x) {
         fill(158, 20, 20, 255)
         stroke(255)
         strokeWeight(1)
-        ellipse(this.pos.x + this.x_off, this.pos.y + this.y_off, this.r)
+        let x = this.pos.x + this.x_off
+        let y = this.pos.y + this.y_off
+        let a = count * 0.1
+        ellipse(x, y, this.r)
+        stroke(23, 222, 43)
+        let leaf = map(cos((PI + a)), -1, 1, 2, 4)
+        strokeWeight(leaf)
+        line(x, y - this.r/2 + 2 * (leaf-2), x + this.r / 6 * sin(a), y - this.r*0.75 + 2 * (leaf-2))
         noStroke()
     }
 
