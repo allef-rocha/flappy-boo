@@ -8,9 +8,9 @@ function Cloud(x){
     this.velocity = 2/this.z
 
     this.show = function(){
-        tint(255,126)
+        // tint(255,126)
         image(cloudImg,this.x,this.y, this.w, this.h)
-        noTint()
+        // noTint()
     }
 
     this.update = function(){

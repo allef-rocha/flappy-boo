@@ -1,7 +1,7 @@
 function Star(x, y) {
     this.x = x || random(width)
     this.y = y || random(height / 2)
-    this.r = 2
+    this.r = ceil(random(3))
 
     this.show = function () {
         noStroke();
@@ -14,7 +14,7 @@ function Star(x, y) {
         if(this.r == 0){
             this.x = random(width)
             this.y = random(height / 2)
-            this.r = 2
+            this.r = 3
         }
         
     }

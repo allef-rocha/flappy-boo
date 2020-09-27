@@ -93,6 +93,7 @@ let pHighScore
 
 let pipeTopImg
 let pipeBtmImg
+let cloudImgOrig
 let cloudImg
 
 let ghostImgs = []
@@ -134,7 +135,7 @@ let increment = 1
 function preload() {
 	pipeTopImg = loadImage('assets/pipe_top.png')
 	pipeBtmImg = loadImage('assets/pipe_bottom.png')
-	cloudImg = loadImage('assets/cloud.png')
+	cloudImgOrig = loadImage('assets/cloud.png')
 
 	for (i = 0; i < numGhostImgs; i++) {
 		ghostImgs[i] = []
@@ -185,7 +186,10 @@ function transparence(img, val) {
 
 function setup() {
 	mobileDevice = isMobile()
+	// setFrameRate(50)
 	noLoop()
+
+	cloudImg = transparence(cloudImgOrig, 125)
 
 	for (i = 0; i < numGhostImgs; i++) {
 		ghostImgsTint[i] = []
@@ -246,7 +250,7 @@ function draw() {
 	if (reset) resetGame()
 	if (starting) {
 		counterText = i
-		if (count % 60 == 0) {
+		if (count % 50 == 0) {
 			i--
 		}
 		if (i < 1) {
