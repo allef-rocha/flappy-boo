@@ -16,6 +16,7 @@ function Bird() {
     this.score = 0
     this.intangible = false
     this.clock = 0
+    this.dead = false
 
     this.show = function () {
         // fill(this.color)
@@ -36,26 +37,38 @@ function Bird() {
             stroke(255)
             strokeWeight(2)
             ellipse(this.x, this.y, this.r * 2)
-            line(this.x + 5, this.y + 13, this.x + 17, this.y + 13)
+            // arc(this.x+11,this.y+17,15,10,PI+0.4,-0.4,OPEN) 
             if (this.velocity > 0 || this.onTheGround) {
                 ellipse(this.x + 5, this.y, 15)
                 ellipse(this.x + 20, this.y + 1, 10, 12)
             } else {
-                line(this.x, this.y, this.x + 12.5, this.y)
-                line(this.x + 15, this.y, this.x + 25, this.y)
+                noFill()
+                arc(this.x+6, this.y+1, 12, 8, -PI, PI)
+                arc(this.x+20, this.y+1, 9, 6, PI, -PI)
             }
         }else if(stage == 0){
             fill(this.color)
             stroke(255)
+            strokeWeight(1)
             ellipse(this.x, this.y, this.r * 2)
-            line(this.x + 5, this.y + 13, this.x + 17, this.y + 13)
-            if (this.velocity > 0 || this.onTheGround) {
+            if(this.dead){
                 fill(117, 192, 255, 125)
                 ellipse(this.x + 5, this.y, 15)
                 ellipse(this.x + 20, this.y + 1, 10, 12)
-            } else {
-                line(this.x, this.y, this.x + 12.5, this.y)
-                line(this.x + 15, this.y, this.x + 25, this.y)
+                noFill()
+                arc(this.x+11,this.y+17,15,10,PI+0.4,-0.4,OPEN)   
+            }
+            else{
+                noFill()
+                arc(this.x+11,this.y+11,15,10,0.2,PI-0.2,CHORD)
+                if (this.velocity > 0 || this.onTheGround) {
+                    fill(117, 192, 255, 125)
+                    ellipse(this.x + 5, this.y, 15)
+                    ellipse(this.x + 20, this.y + 1, 10, 12)
+                } else {
+                    arc(this.x+6, this.y+1, 12, 8, -PI, PI)
+                    arc(this.x+20, this.y+1, 9, 6, PI, -PI)
+                }
             }
 
             noStroke()
@@ -85,9 +98,9 @@ function Bird() {
         if (this.y < this.r) {
             this.y = this.r
             this.velocity = 0
-        } else if (this.y > height - this.r) {
+        } else if (this.y > height - this.r + groundStroke) {
             this.onTheGround = true
-            this.y = height - this.r
+            this.y = height - this.r + groundStroke
             this.velocity = 0
         } else {
             this.onTheGround = false
