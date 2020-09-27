@@ -84,7 +84,6 @@ let nearestPipe
 let bones = []
 
 let count = 0
-let lastCount = 0
 
 let currentPoints = 0
 let highestPoints = 0
@@ -244,7 +243,7 @@ function draw() {
 	if (reset) resetGame()
 	if (starting) {
 		counterText = i
-		if (count % 30 == 0) {
+		if (count % 60 == 0) {
 			i--
 		}
 		if (i < 1) {
@@ -277,134 +276,134 @@ function draw() {
 			}
 		}
 
-	//check colision and update the bird
-	bird.update()
+		//check colision and update the bird
+		bird.update()
 
-	//update the pipes and remove if pipe is off-screen
-	pipes.forEach((pipe, index) => {
-		pipe.update()
-		if (pipe.x < -pipeWidth - 5) {
-			pipe.x = pipes.length * pipeDistPixels - pipeWidth - 5
-			pipe.y = random(1, height - 1 - pipeGap)
-		}
-	})
+		//update the pipes and remove if pipe is off-screen
+		pipes.forEach((pipe, index) => {
+			pipe.update()
+			if (pipe.x < -pipeWidth - 5) {
+				pipe.x = pipes.length * pipeDistPixels - pipeWidth - 5
+				pipe.y = random(1, height - 1 - pipeGap)
+			}
+		})
 
+
+		clouds.forEach((cloud, index) => {
+			cloud.update()
+			if (cloud.isOffScreen()) {
+				cloud.x = width + imgCloudWidth
+			}
+		})
+
+		stars.forEach(star => {
+			if (random(1) < 0.001)
+				star.update()
+		})
+		bones.forEach(bone => {
+			bone.update()
+		})
+		if (apple)
+			apple.update()
+	}
 
 	clouds.forEach((cloud, index) => {
-		cloud.update()
-		if (cloud.isOffScreen()) {
-			cloud.x = width + imgCloudWidth
-		}
+		cloud.show()
 	})
-
 	stars.forEach(star => {
-		if (random(1) < 0.001)
-			star.update()
+		star.show()
 	})
+
+	noStroke()
+	fill("#5a5945")
+	rect(-groundStroke / 2, height, width + groundStroke, groundStroke)
+
+	fill("#84674c")
+	rect(-groundStroke / 2, height + groundStroke, width + groundStroke, groundHeight - groundStroke)
+
+	fill("#94765a")
+	// rect(-groundStroke / 2, height+2*groundStroke, width + groundStroke, groundHeight-2*groundStroke)
+	fill("#9d7d60")
+	rect(-groundStroke / 2, height + 2.6 * groundStroke, width + groundStroke, groundHeight - 2 * groundStroke)
+
 	bones.forEach(bone => {
-		bone.update()
+		// bone.update()
+		bone.show()
 	})
+	fill(0, 80)
+	rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
+	// setGradient(-groundStroke / 2, height+groundStroke/4, width + groundStroke, groundHeight, color(0,155), color(0,0))
+
 	if (apple)
-		apple.update()
-}
-
-clouds.forEach((cloud, index) => {
-	cloud.show()
-})
-stars.forEach(star => {
-	star.show()
-})
-
-noStroke()
-fill("#5a5945")
-rect(-groundStroke / 2, height, width + groundStroke, groundStroke)
-
-fill("#84674c")
-rect(-groundStroke / 2, height + groundStroke, width + groundStroke, groundHeight - groundStroke)
-
-fill("#94765a")
-// rect(-groundStroke / 2, height+2*groundStroke, width + groundStroke, groundHeight-2*groundStroke)
-fill("#9d7d60")
-rect(-groundStroke / 2, height + 2.6 * groundStroke, width + groundStroke, groundHeight - 2 * groundStroke)
-
-bones.forEach(bone => {
-	// bone.update()
-	bone.show()
-})
-fill(0, 80)
-rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
-// setGradient(-groundStroke / 2, height+groundStroke/4, width + groundStroke, groundHeight, color(0,155), color(0,0))
-
-if (apple)
-	apple.show()
+		apple.show()
 
 
-pipes.forEach(pipe => {
-	pipe.show()
-})
+	pipes.forEach(pipe => {
+		pipe.show()
+	})
 
+	if (pipeColision(bird, nearestPipe)) {
+		bird.dead = true
+		endGame()
+	}
+	bird.show()
 
+	background(70, 70, 70, darkness)
 
+	fill(255)
+	textSize(30)
+	text("Score  " + currentPoints, 10, 40)
+	textSize(15)
+	text("Record  " + highestPoints, 10, 70)
+	if (msg) {
+		if (!init) {
+			fill(255, 150)
+			textAlign(CENTER)
+			if (mobileDevice) {
+				textSize(30)
+				text("Press to start", mobileWidth / 2, height / 2)
 
-
-if (pipeColision(bird, nearestPipe)) {
-	bird.dead = true
-	endGame()
-}
-bird.show()
-
-background(70, 70, 70, darkness)
-
-fill(255)
-textSize(30)
-text("Score  " + currentPoints, 10, 40)
-textSize(15)
-text("Record  " + highestPoints, 10, 70)
-if (msg) {
-
-
-	if (!init) {
-		fill(255, 150)
-		textAlign(CENTER)
-		if (mobileDevice) {
-			textSize(30)
-			text("Press to start", mobileWidth / 2, height / 2)
-
-		} else {
-			textSize(30)
-			text("Press \"SPACE\" to start", width / 2, height / 2)
+			} else {
+				textSize(30)
+				text("Press \"SPACE\" to start", width / 2, height / 2)
+			}
+			textAlign(LEFT, BASELINE)
 		}
-		textAlign(LEFT, BASELINE)
+
+		fill(255, 255, 255, 100)
+		if (mobileDevice) {
+			textAlign(CENTER)
+			textSize(50)
+			text(gameOverText, mobileWidth / 2, height / 2)
+			textSize(9)
+			text(pressEnterMobileText, mobileWidth / 2, height / 2 + 40)
+
+			textSize(50)
+			text(counterText, mobileWidth / 2, height / 2)
+			textAlign(LEFT, BASELINE)
+		} else {
+			textAlign(CENTER)
+			textSize(100)
+			text(gameOverText, width / 2, height / 2)
+			textSize(17)
+			text(pressEnterText, width / 2, height / 2 + 40)
+
+			textSize(100)
+			text(counterText, width / 2, height / 2)
+			textAlign(LEFT, BASELINE)
+		}
 	}
 
-	fill(255, 255, 255, 100)
-	if (mobileDevice) {
-		textAlign(CENTER)
-		textSize(50)
-		text(gameOverText, mobileWidth / 2, height / 2)
-		textSize(9)
-		text(pressEnterMobileText, mobileWidth / 2, height / 2 + 40)
-
-		textSize(50)
-		text(counterText, mobileWidth / 2, height / 2)
-		textAlign(LEFT, BASELINE)
-	} else {
-		textAlign(CENTER)
-		textSize(100)
-		text(gameOverText, width / 2, height / 2)
-		textSize(17)
-		text(pressEnterText, width / 2, height / 2 + 40)
-
-		textSize(100)
-		text(counterText, width / 2, height / 2)
-		textAlign(LEFT, BASELINE)
+	if (pulse) {
+		noLoop()
+		pulse = false
 	}
-}
-
-if (pulse) {
-	noLoop()
-	pulse = false
-}
+	if (paused && init && !starting) {
+		textAlign(CENTER)
+		fill(255,200)
+		textSize(40)
+		text("Paused", width / 2, height / 2)
+	}
 }
 
 
@@ -467,6 +466,7 @@ function endGame() {
 
 function resetGame() {
 	count = 1
+	applesEaten = 0
 	bird = new Bird()
 	pipes = []
 	bones = []
@@ -498,10 +498,8 @@ function touchStarted(e) {
 	if (!starting) {
 		if (!gameOver) {
 			bird.jump()
-			if (!paused) {
-				lastCount = count
-			} else {
-				countAndPay()
+			if (paused) {
+				countAndPlay()
 				paused = false
 			}
 			init = true
@@ -530,7 +528,7 @@ function touchStarted(e) {
 			pulse = true
 			setTimeout(() => {
 				loop()
-				countAndPay()
+				countAndPlay()
 			}, 800)
 		}
 	}
@@ -540,23 +538,20 @@ function keyPressed() {
 	if (!starting) {
 		if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && !gameOver) {
 			bird.jump()
-			if (!paused) {
-				lastCount = count
-			} else {
-				countAndPay()
+			if (paused) {
+				countAndPlay()
 				paused = false
 			}
 			init = true
-		}
-		// else if (keyCode === BACKSPACE && !gameOver) {
-		// 	if (paused) {
-		// 		loop()
-		// 	} else {
-		// 		noLoop()
-		// 	}
-		// 	paused = !paused
-		// } 
-		else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
+		} else if (keyCode === BACKSPACE && !gameOver && init) {
+			if (paused) {
+				paused = false
+				countAndPlay(false)
+			} else {
+				paused = true
+				noLoop()
+			}
+		} else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
 			msg = false
 			pressEnterText = ""
 			pressEnterMobileText = ""
@@ -577,17 +572,19 @@ function keyPressed() {
 			pulse = true
 			setTimeout(() => {
 				loop()
-				countAndPay()
+				countAndPlay()
 			}, 800)
 		}
 	}
 }
 
-countAndPay = function () {
+countAndPlay = function (willJump = true) {
 	msg = true
 	gameOverText = ""
 	gameOver = false
 	starting = true
+	pause = false
+	count = 1
 	loop()
-	bird.jump()
+	if (willJump) bird.jump()
 }
