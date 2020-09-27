@@ -7,17 +7,19 @@ const SHAPES = [STONE, BONE, STONE, HEAD, STONE, BONE, STONE]
 function Bone(x, type) {
     this.speed = createVector(-pipeSpeed, 0)
     this.type = type || random(SHAPES)
-    let y = random(height + 20, height + groundHeight+5)
+    let y = random(height + 20, height + groundHeight)
+    if(type == STONE) y -= 20
     this.pos = createVector(x, y)
     this.angle = random(-PI, PI)
     this.size = random(0.3, 0.5) * groundHeight
     
     this.reset = function (x) {
-        let y = random(height + 20, height + groundHeight+5)
+        this.type = random(SHAPES)
+        let y = random(height + 20, height + groundHeight)
+        if(type == STONE) y -= 20
         this.pos = createVector(x, y)
         this.angle = random(-PI, PI)
         this.size = random(0.3, 0.5) * groundHeight
-        this.type = random(SHAPES)
         
     }
 
@@ -50,9 +52,8 @@ function Bone(x, type) {
         push()
         rectMode(CENTER)
         translate(this.pos.x, this.pos.y)
-        rotate(this.angle)
-        scale(this.size / 70)
-
+        rotate(this.angle/6 - PI/2)
+        scale(this.size / 100)
         noStroke();
         fill(200);
         strokeWeight(2);
@@ -96,7 +97,7 @@ function Bone(x, type) {
         push()
         rectMode(CENTER)
         translate(this.pos.x, this.pos.y)
-        rotate(this.angle)
+        rotate(this.angle/6)
         scale(this.size / 200)
         fill(200)
         strokeWeight(2)

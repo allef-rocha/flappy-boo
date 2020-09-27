@@ -10,16 +10,14 @@ function Pipe(x, y){
 
     this.show = function(){
         fill(this.color)
-        stroke(255,100,100)
+        noStroke()
         image(pipeTopImg,this.x,this.y-imgPipeHeight)
-        image(pipeBtmImg,this.x,this.y+this.gap)
+        image(pipeBtmImg,this.x,this.y+this.gap, this.w,height-this.y-this.gap+groundStroke,0,0,this.w,height-this.y-this.gap+groundStroke)
+        
+        // stroke(255,100,100)
+        // rect(this.x, 0, this.w, this.y)
+        // rect(this.x, this.y + this.gap, this.w, height - this.y - this.gap)
 
-        if(showHitBox){
-            stroke(255,0,0)
-            noFill()
-            rect(this.x, 0, this.w, this.y)
-            rect(this.x, this.y + this.gap, this.w, height - this.y - this.gap)
-        }
     }
 
     this.update = function(){

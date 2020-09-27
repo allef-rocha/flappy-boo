@@ -47,6 +47,7 @@ function Bird() {
         }else if(stage == 0){
             fill(this.color)
             stroke(255)
+            strokeWeight(1)
             ellipse(this.x, this.y, this.r * 2)
             line(this.x + 5, this.y + 13, this.x + 17, this.y + 13)
             if (this.velocity > 0 || this.onTheGround) {
@@ -85,9 +86,9 @@ function Bird() {
         if (this.y < this.r) {
             this.y = this.r
             this.velocity = 0
-        } else if (this.y > height - this.r) {
+        } else if (this.y > height - this.r + groundStroke) {
             this.onTheGround = true
-            this.y = height - this.r
+            this.y = height - this.r + groundStroke
             this.velocity = 0
         } else {
             this.onTheGround = false
