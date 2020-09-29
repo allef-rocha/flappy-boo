@@ -5,8 +5,11 @@ function Star(x, y) {
 
     this.show = function () {
         noStroke();
-        fill(255, 255, 255);
+        fill(255, 255, 255, 255 - (this.r-1)*55);
         ellipse(this.x, this.y, this.r, this.r);
+        stroke(255)
+        strokeWeight(1)
+        noStroke();
     }
 
     this.update = function(){

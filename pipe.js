@@ -9,7 +9,7 @@ function Pipe(x, y){
     this.color = 255,100
 
     this.show = function(){
-        fill(this.color)
+        // fill(this.color)
         noStroke()
         image(pipeTopImg,this.x,this.y-imgPipeHeight)
         image(pipeBtmImg,this.x,this.y+this.gap, this.w,height-this.y-this.gap+groundStroke,0,0,this.w,height-this.y-this.gap+groundStroke)
@@ -22,13 +22,13 @@ function Pipe(x, y){
 
     this.update = function(){
         this.x -= this.speed
-        if(this.colided){
-            this.color = [255,125,125,100]
-        }else if(this.notColided){
-            this.color = [125,255,175,100]
-        }else{
-            this.color = [255,255,255,100]
-        }
+        // if(this.colided){
+        //     this.color = [255,125,125,100]
+        // }else if(this.notColided){
+        //     this.color = [125,255,175,100]
+        // }else{
+        //     this.color = [255,255,255,100]
+        // }
     }
 }
 

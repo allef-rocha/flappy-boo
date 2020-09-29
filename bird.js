@@ -11,7 +11,7 @@ function Bird() {
     this.onTheGround = false
     this.imageIndex = floor(random(ghostImgsTint.length))
     this.color = color(colors[this.imageIndex])
-    this.color.setAlpha(125)
+    this.color.setAlpha(200)
     this.image = ghostImgsTint[this.imageIndex]
     this.score = 0
     this.intangible = false
@@ -32,45 +32,44 @@ function Bird() {
             }
             // noTint()
             imageMode(CORNER)
-        } else if (stage == 2){
+        } else if (stage == 2) {
             noFill()
             stroke(255)
             strokeWeight(2)
             ellipse(this.x, this.y, this.r * 2)
             // arc(this.x+11,this.y+17,15,10,PI+0.4,-0.4,OPEN) 
-            if (this.velocity > 0 || this.onTheGround) {
-                ellipse(this.x + 5, this.y, 15)
-                ellipse(this.x + 20, this.y + 1, 10, 12)
-            } else {
-                noFill()
-                arc(this.x+6, this.y+1, 12, 8, -PI, PI)
-                arc(this.x+20, this.y+1, 9, 6, PI, -PI)
-            }
-        }else if(stage == 0){
+            ellipse(this.x + 5, this.y, 15)
+            ellipse(this.x + 20, this.y + 1, 10, 12)
+        } else if (stage == 0) {
             fill(this.color)
             stroke(255)
             strokeWeight(1)
             ellipse(this.x, this.y, this.r * 2)
-            if(this.dead){
-                fill(117, 192, 255, 125)
-                arc(this.x + 5, this.y, 15, 15, -HALF_PI+0.9, PI, CHORD)
-                arc(this.x + 20, this.y + 1, 10, 12,0, -HALF_PI-0.7, CHORD)
+            if (this.dead) {
+                fill(191, 242, 255, 200)
+                arc(this.x + 5, this.y, 15, 15, -HALF_PI + 0.9, PI, CHORD)
+                arc(this.x + 20, this.y + 1, 10, 12, 0, -HALF_PI - 0.7, CHORD)
                 noFill()
-                arc(this.x+11,this.y+17,15,10,PI+0.4,-0.4,OPEN)   
-            }
-            else{
-                if (this.velocity > 0 || this.onTheGround) {
+                arc(this.x + 11, this.y + 17, 15, 10, PI + 0.4, -0.4, OPEN)
+            } else {
+                if (this.velocity === this.maxSpeed) {
                     fill("#eee")
-                    arc(this.x+11,this.y+11,15,10,0.2,PI-0.2,CHORD)
-                    fill(117, 192, 255, 125)
+                    ellipse(this.x + 13, this.y + 13, 7)
+                    fill(191, 242, 255, 200)
+                    ellipse(this.x + 5, this.y, 15)
+                    ellipse(this.x + 20, this.y + 1, 10, 12)
+                } else if (this.velocity > 0 || this.onTheGround) {
+                    fill("#eee")
+                    arc(this.x + 11, this.y + 11, 15, 10, 0.2, PI - 0.2, CHORD)
+                    fill(191, 242, 255, 200)
                     ellipse(this.x + 5, this.y, 15)
                     ellipse(this.x + 20, this.y + 1, 10, 12)
                 } else {
                     fill("#eee")
-                    arc(this.x+11,this.y+11,15,13,0.2,PI-0.2,CHORD)
+                    arc(this.x + 11, this.y + 11, 15, 13, 0.2, PI - 0.2, CHORD)
                     noFill()
-                    arc(this.x+6, this.y+1, 12, 8, -PI, PI)
-                    arc(this.x+20, this.y+1, 9, 6, PI, -PI)
+                    arc(this.x + 6, this.y + 1, 12, 8, -PI, PI)
+                    arc(this.x + 20, this.y + 1, 9, 6, PI, -PI)
                 }
             }
 

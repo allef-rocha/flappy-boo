@@ -1,5 +1,5 @@
 const width = 1000
-let height = 550
+let height = 540
 let mobileWidth = 372
 
 const colors = [
@@ -132,6 +132,8 @@ let fog
 let darkness = 150
 let increment = 1
 
+const fr = 60
+
 function preload() {
 	pipeTopImg = loadImage('assets/pipe_top.png')
 	pipeBtmImg = loadImage('assets/pipe_bottom.png')
@@ -186,7 +188,7 @@ function transparence(img, val) {
 
 function setup() {
 	mobileDevice = isMobile()
-	// setFrameRate(50)
+	setFrameRate(fr)
 	noLoop()
 
 	cloudImg = transparence(cloudImgOrig, 125)
@@ -221,7 +223,8 @@ function setup() {
 
 	for (let i = 0; i < 4; i++) {
 		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
-		bones.push(new Bone(i * pipeDistPixels * random(0.5, 1.5)))
+		bones.push(new Bone(i * pipeDistPixels * random(0.6, 1.4)))
+		bones.push(new Bone(i * pipeDistPixels * random(0.6, 1.4)))
 	}
 	nearestPipe = pipes[0]
 
@@ -250,7 +253,7 @@ function draw() {
 	if (reset) resetGame()
 	if (starting) {
 		counterText = i
-		if (count % 50 == 0) {
+		if (count % fr == 0) {
 			i--
 		}
 		if (i < 1) {
@@ -333,21 +336,22 @@ function draw() {
 	fill("#9d7d60")
 	rect(-groundStroke / 2, height + 2.6 * groundStroke, width + groundStroke, groundHeight - 2 * groundStroke)
 
+	
+	if (apple)
+	apple.show()
+	
+	fill(0, 80)
+	rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
+	
+	pipes.forEach(pipe => {
+		pipe.show()
+	})
+	
 	bones.forEach(bone => {
 		// bone.update()
 		bone.show()
 	})
-	fill(0, 80)
-	rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
 	// setGradient(-groundStroke / 2, height+groundStroke/4, width + groundStroke, groundHeight, color(0,155), color(0,0))
-
-	if (apple)
-		apple.show()
-
-
-	pipes.forEach(pipe => {
-		pipe.show()
-	})
 
 	if (pipeColision(bird, nearestPipe)) {
 		bird.dead = true
@@ -494,7 +498,8 @@ function resetGame() {
 	bones = []
 	for (let i = 0; i < 4; i++) {
 		pipes.push(new Pipe(width + i * pipeDistPixels, random(5, height - pipeGap - 5), pipeWidth, pipeGap))
-		bones.push(new Bone(i * pipeDistPixels * random(0.5, 1.5)))
+		bones.push(new Bone(i * pipeDistPixels * random(0.6, 1.4)))
+		bones.push(new Bone(i * pipeDistPixels * random(0.6, 1.4)))
 	}
 	nearestPipe = pipes[0]
 	currentPoints = 0
