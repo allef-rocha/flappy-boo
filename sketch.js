@@ -134,6 +134,8 @@ let increment = 1
 
 const fr = 60
 
+let firstTouch = true
+
 function preload() {
 	pipeTopImg = loadImage('assets/pipe_top.png')
 	pipeBtmImg = loadImage('assets/pipe_bottom.png')
@@ -336,17 +338,17 @@ function draw() {
 	fill("#9d7d60")
 	rect(-groundStroke / 2, height + 2.6 * groundStroke, width + groundStroke, groundHeight - 2 * groundStroke)
 
-	
+
 	if (apple)
-	apple.show()
-	
+		apple.show()
+
 	fill(0, 80)
 	rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
-	
+
 	pipes.forEach(pipe => {
 		pipe.show()
 	})
-	
+
 	bones.forEach(bone => {
 		// bone.update()
 		bone.show()
@@ -522,53 +524,55 @@ function setGradient(x, y, w, h, c1, c2) {
 
 function touchStarted(e) {
 	e.preventDefault()
-	let x, y
-	if (e.touches) {
-		x = e.touches[0].clientX
-		y = e.touches[0].clientY
-	}
-	if (x > 300 && y < 60 && mobileDevice && init && !starting) {
-		if (paused) {
-			paused = false
-			countAndPlay(false)
-		} else {
-			paused = true
-			noLoop()
+	if (!firstTouch) {
+		let x, y
+		if (e.touches) {
+			x = e.touches[0].clientX
+			y = e.touches[0].clientY
 		}
-	} else if (!starting) {
-		if (!gameOver) {
-			bird.jump()
-			if (!paused && !init) {
-				countAndPlay()
-			}
-			init = true
-		} else if (gameOver && littleTime) {
-			msg = false
-			pressEnterText = ""
-			pressEnterMobileText = ""
-			gameOver = false
-			littleTime = false
-			push()
-			fill(bird.color)
-			textAlign(CENTER)
-			textSize(50)
-			if (mobileDevice) {
-				translate(mobileWidth / 2, height * 0.7)
+		if (x > 300 && y < 60 && mobileDevice && init && !starting) {
+			if (paused) {
+				paused = false
+				countAndPlay(false)
 			} else {
-				translate(width / 2, height * 0.7)
+				paused = true
+				noLoop()
 			}
-			let rot = random(0.5, 0.8) * PI / 8
-			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
-			text("Go!", 0, 0)
-			textAlign(LEFT, BASELINE)
-			pop()
+		} else if (!starting) {
+			if (!gameOver) {
+				bird.jump()
+				if (!paused && !init) {
+					countAndPlay()
+				}
+				init = true
+			} else if (gameOver && littleTime) {
+				msg = false
+				pressEnterText = ""
+				pressEnterMobileText = ""
+				gameOver = false
+				littleTime = false
+				push()
+				fill(bird.color)
+				textAlign(CENTER)
+				textSize(50)
+				if (mobileDevice) {
+					translate(mobileWidth / 2, height * 0.7)
+				} else {
+					translate(width / 2, height * 0.7)
+				}
+				let rot = random(0.5, 0.8) * PI / 8
+				random(1) > 0.5 ? rotate(-rot) : rotate(rot)
+				text("Go!", 0, 0)
+				textAlign(LEFT, BASELINE)
+				pop()
 
-			// gameOverText = random(phrases)
-			pulse = true
-			setTimeout(() => {
-				loop()
-				countAndPlay()
-			}, 800)
+				// gameOverText = random(phrases)
+				pulse = true
+				setTimeout(() => {
+					loop()
+					countAndPlay()
+				}, 800)
+			}
 		}
 	}
 }
