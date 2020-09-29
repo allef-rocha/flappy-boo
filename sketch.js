@@ -134,24 +134,24 @@ let increment = 1
 
 const fr = 60
 
-function preload() {
-	pipeTopImg = loadImage('assets/pipe_top.png')
-	pipeBtmImg = loadImage('assets/pipe_bottom.png')
-	cloudImgOrig = loadImage('assets/cloud.png')
+// function preload() {
+// 	pipeTopImg = loadImage('assets/pipe_top.png')
+// 	pipeBtmImg = loadImage('assets/pipe_bottom.png')
+// 	cloudImgOrig = loadImage('assets/cloud.png')
 
-	for (i = 0; i < numGhostImgs; i++) {
-		ghostImgs[i] = []
-		ghostImgs[i].push(loadImage('assets/ghosts/ghost' + (i + 1) + '-0.png'))
-		ghostImgs[i].push(loadImage('assets/ghosts/ghost' + (i + 1) + '-1.png'))
-	}
+// 	for (i = 0; i < numGhostImgs; i++) {
+// 		ghostImgs[i] = []
+// 		ghostImgs[i].push(loadImage('assets/ghosts/ghost' + (i + 1) + '-0.png'))
+// 		ghostImgs[i].push(loadImage('assets/ghosts/ghost' + (i + 1) + '-1.png'))
+// 	}
 
-	moonLight = loadFont('fonts/Moon Bold.otf')
-	if (localStorage.flappy_boo_record) {
-		highestPoints = localStorage.flappy_boo_record
-	} else {
-		localStorage.setItem('flappy_boo_record', 0)
-	}
-}
+// 	moonLight = loadFont('fonts/Moon Bold.otf')
+// 	if (localStorage.flappy_boo_record) {
+// 		highestPoints = localStorage.flappy_boo_record
+// 	} else {
+// 		localStorage.setItem('flappy_boo_record', 0)
+// 	}
+// }
 
 p5.Image.prototype.tint = function (img, r, g, b, a) {
 	let pg = createGraphics(2 * birdRadius, 2 * birdRadius);
