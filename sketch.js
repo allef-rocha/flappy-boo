@@ -134,7 +134,7 @@ let increment = 1
 
 const fr = 60
 
-let firstTouch = true
+// let firstTouch = true
 
 function preload() {
 	pipeTopImg = loadImage('assets/pipe_top.png')
@@ -524,7 +524,7 @@ function setGradient(x, y, w, h, c1, c2) {
 
 function touchStarted(e) {
 	e.preventDefault()
-	if (!firstTouch) {
+	// if (!firstTouch) {
 		let x, y
 		if (e.touches) {
 			x = e.touches[0].clientX
@@ -574,7 +574,7 @@ function touchStarted(e) {
 				}, 800)
 			}
 		}
-	}
+	// }
 }
 
 function keyPressed() {
