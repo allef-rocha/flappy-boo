@@ -23,7 +23,6 @@
 	<script src="libraries/p5.js"></script>
 	<script src="libraries/p5.dom.js"></script>
 	<script src="libraries/p5.sound.js"></script>
-	<script src="sw.js"></script>
 	<script src="sketch.js"></script>
 	<script src="pipe.js"></script>
 	<script src="cloud.js"></script>
@@ -82,57 +81,19 @@
 			margin: 0 auto;
 			padding: 0 auto;
 		}
+
+		#fullContainer {
+			display: flex;
+		}
 	</style>
 </head>
 
 <body>
-	</div>
 	<h1>Flappy-Boo</h1>
 	<div id="fullContainer">
 		<div id="gameContainer"></div>
 	</div>
-
-
-	<script type="text/javascript">
-		// if ('serviceWorker' in navigator) {
-		// 	window.addEventListener('load', function () {
-		// 		navigator.serviceWorker.register('/sw.js').then(function (registration) {
-		// 			// Registration was successful
-		// 			console.log('ServiceWorker registration successful with scope: ', registration.scope);
-		// 		}, function (err) {
-		// 			// registration failed :(
-		// 			console.log('ServiceWorker registration failed: ', err);
-		// 		});
-		// 	});
-		// }
-
-		// let mobile = "ontouchstart" in document.documentElement
-		// let deferredPrompt;
-		// if (mobile) {
-		// 	window.addEventListener('beforeinstallprompt', (e) => {
-		// 		e.preventDefault();
-		// 		deferredPrompt = e;
-
-		// 		let container = document.getElementById('fullContainer')
-		// 		container.addEventListener("touchend", (e) => {
-		// 			if (firstTouch) {
-		// 				firstTouch = false
-		// 				deferredPrompt.prompt();
-		// 				deferredPrompt.userChoice
-		// 					.then((choiceResult) => {
-		// 						if (choiceResult.outcome === 'accepted') {
-		// 							console.log('User accepted the A2HS prompt');
-		// 						} else {
-		// 							console.log('User dismissed the A2HS prompt');
-		// 						}
-		// 						deferredPrompt = null;
-		// 					});
-		// 				container.style.display = 'block';
-		// 			}
-		// 		})
-		// 	});
-		// }
-	</script>
+	</div>
 </body>
 
 </html>

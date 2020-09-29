@@ -1,6 +1,6 @@
 {
     "name": "Flappy Boo",
-    "short_name": "Boo",
+    "short_name": "Flappy Boo",
     "icons": [
         {
             "src": "android-chrome-192x192.png",
@@ -13,7 +13,6 @@
             "type": "image/png"
         }
     ],
-    "start_url": "../",
     "theme_color": "#333333",
     "background_color": "#333333",
     "display": "standalone",
