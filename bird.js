@@ -1,9 +1,11 @@
 const powerTime = 500
 let stage = 0
+let flagTransitSound = true
+
 
 function Bird() {
     this.x = birdX
-    this.y = height / 2
+    this.y = height / 4
     this.r = birdRadius
     this.velocity = 0
     this.acc = 0.8
@@ -90,6 +92,10 @@ function Bird() {
             if (this.clock > powerTime) {
                 this.toNormal()
             } else if (this.clock > powerTime * 0.75) {
+                if(flagTransitSound){
+                    sTransition.play()
+                    flagTransitSound = false
+                } 
                 if (count % 25 === 0) {
                     stage = stage === 1 ? 2 : 1
                 }
@@ -112,6 +118,7 @@ function Bird() {
     }
 
     this.jump = function (jumpSize = birdJump) {
+        sJump.play()
         this.velocity = -jumpSize
     }
 
@@ -122,6 +129,7 @@ function Bird() {
     }
 
     this.toNormal = function () {
+        flagTransitSound = true
         this.intangible = false
         this.clock = 0
         stage = 0

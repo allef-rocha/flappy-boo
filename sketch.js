@@ -55,7 +55,7 @@ const groundStroke = 10
 const TRAIN = 0
 const PLAY = 1
 
-let i = 3
+let i = 4
 
 let paused = false
 
@@ -132,9 +132,28 @@ let fog
 let darkness = 150
 let increment = 1
 
+let sMusic
+let sDead
+let sDing1
+let sDing2
+let sJump
+let sPowerUp
+let sTransition
+let sZap
+
 const fr = 60
 
 function preload() {
+
+	sMusic = loadSound("assets/sounds/bgmusic.wav")
+	sDead = loadSound("assets/sounds/dead.wav")
+	sDing1 = loadSound("assets/sounds/ding1.wav")
+	sDing2 = loadSound("assets/sounds/ding2.wav")
+	sJump = loadSound("assets/sounds/jump.wav")
+	sPowerUp = loadSound("assets/sounds/powerup.wav")
+	sTransition = loadSound("assets/sounds/transition.wav")
+	sZap = loadSound("assets/sounds/zap.wav")
+
 	pipeTopImg = loadImage('assets/pipe_top.png')
 	pipeBtmImg = loadImage('assets/pipe_bottom.png')
 	cloudImgOrig = loadImage('assets/cloud.png')
@@ -187,6 +206,17 @@ function transparence(img, val) {
 }
 
 function setup() {
+	sMusic.setVolume(0.13)
+	// music.loop()
+
+	sDead.setVolume(0.2)
+	sDing1.setVolume(0.15)
+	sDing2.setVolume(0.15)
+	sJump.setVolume(0.15)
+	sPowerUp.setVolume(0.2)
+	sTransition.setVolume(0.2)
+	sZap.setVolume(0.15)
+
 	mobileDevice = isMobile()
 	setFrameRate(fr)
 	noLoop()
@@ -242,28 +272,30 @@ function setup() {
 
 	bird = new Bird()
 
-	i = 3
+	i = 4
 	background(0)
 }
 
 function draw() {
 	background(10, 10, 40)
-	count++
-
+	
 	if (reset) resetGame()
 	if (starting) {
-		counterText = i
 		if (count % fr == 0) {
 			i--
+			counterText = i
+			sDing1.play()
 		}
 		if (i < 1) {
 			counterText = ""
-			i = 3
+			i = 4
 			msg = false
 			starting = false
+			sDing2.play()
 		}
 	} else {
 		if (apple && apple.eaten(bird)) {
+			sPowerUp.play()
 			applesEaten++
 			// console.log("comeu")
 			apple = null
@@ -336,17 +368,17 @@ function draw() {
 	fill("#9d7d60")
 	rect(-groundStroke / 2, height + 2.6 * groundStroke, width + groundStroke, groundHeight - 2 * groundStroke)
 
-	
+
 	if (apple)
-	apple.show()
-	
+		apple.show()
+
 	fill(0, 80)
 	rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
-	
+
 	pipes.forEach(pipe => {
 		pipe.show()
 	})
-	
+
 	bones.forEach(bone => {
 		// bone.update()
 		bone.show()
@@ -354,6 +386,7 @@ function draw() {
 	// setGradient(-groundStroke / 2, height+groundStroke/4, width + groundStroke, groundHeight, color(0,155), color(0,0))
 
 	if (pipeColision(bird, nearestPipe)) {
+		sDead.play()
 		bird.dead = true
 		endGame()
 	}
@@ -430,6 +463,7 @@ function draw() {
 		let w = mobileDevice ? mobileWidth : width
 		text("Paused", w / 2, height / 2)
 	}
+	count++
 }
 
 
@@ -491,7 +525,7 @@ function endGame() {
 }
 
 function resetGame() {
-	count = 1
+	count = 0
 	applesEaten = 0
 	bird = new Bird()
 	pipes = []
@@ -535,11 +569,13 @@ function touchStarted(e) {
 			paused = true
 			noLoop()
 		}
+		sZap.play()
 	} else if (!starting) {
 		if (!gameOver) {
-			bird.jump()
 			if (!paused && !init) {
 				countAndPlay()
+			} else {
+				bird.jump()
 			}
 			init = true
 		} else if (gameOver && littleTime) {
@@ -560,6 +596,7 @@ function touchStarted(e) {
 			let rot = random(0.5, 0.8) * PI / 8
 			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
 			text("Go!", 0, 0)
+			sZap.play()
 			textAlign(LEFT, BASELINE)
 			pop()
 
@@ -576,9 +613,10 @@ function touchStarted(e) {
 function keyPressed() {
 	if (!starting) {
 		if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && !gameOver) {
-			bird.jump()
 			if (!paused && !init) {
 				countAndPlay()
+			} else {
+				bird.jump()
 			}
 			init = true
 		} else if (keyCode === BACKSPACE && !gameOver && init) {
@@ -589,6 +627,7 @@ function keyPressed() {
 				paused = true
 				noLoop()
 			}
+			sZap.play()
 		} else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
 			msg = false
 			pressEnterText = ""
@@ -603,6 +642,7 @@ function keyPressed() {
 			let rot = random(0.5, 1) * PI / 8
 			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
 			text("Go!", 0, 0)
+			sZap.play()
 			textAlign(LEFT, BASELINE)
 			pop()
 
@@ -616,13 +656,13 @@ function keyPressed() {
 	}
 }
 
-countAndPlay = function (willJump = true) {
+countAndPlay = function (willJump = false) {
 	msg = true
 	gameOverText = ""
 	gameOver = false
 	starting = true
 	paused = false
-	count = 1
+	count = 0
 	loop()
-	if (willJump) bird.jump()
+	// if (willJump) bird.jump()
 }
