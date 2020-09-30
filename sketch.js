@@ -664,5 +664,5 @@ countAndPlay = function (willJump = false) {
 	paused = false
 	count = 0
 	loop()
-	// if (willJump) bird.jump()
+	if (willJump) bird.jump()
 }
