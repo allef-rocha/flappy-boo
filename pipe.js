@@ -1,3 +1,5 @@
+let d = 1
+
 function Pipe(x, y){
     this.x = x
     this.y =y
@@ -7,8 +9,8 @@ function Pipe(x, y){
     this.colided = false
     this.notColided = false
     this.color = 255,100
-
-    this.dir = random([-1,1])
+    d *= -1
+    this.dir = d
 
     this.show = function(){
         // fill(this.color)

@@ -130,8 +130,6 @@ let canvas
 let sky
 let fog
 
-let darkness = 150
-let increment = 1
 let bgGreen = 70
 
 let sMusic
@@ -341,6 +339,11 @@ function draw() {
 			bird.powerUp()
 		}
 		if (poison && poison.eaten(bird)) {
+			currentPoints+=10
+			if (currentPoints > highestPoints) {
+				highestPoints = currentPoints
+				localStorage.flappy_boo_record = highestPoints
+			}
 			sDead.play()
 			poison = null
 			bird.nausea()
@@ -350,14 +353,12 @@ function draw() {
 			nearestPipe.notColided = true
 			let nextIndex = pipes.indexOf(nearestPipe) + 1 >= pipes.length ? 0 : pipes.indexOf(nearestPipe) + 1
 			nearestPipe = pipes[nextIndex]
-			darkness += increment
-			if (darkness > 196 || darkness < 140) increment *= -1
 			if (++currentPoints > highestPoints) {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
 			}
 			if ((currentPoints + 3) % 10 == 0) {
-				if (random(applesEaten) < 0.9) {
+				if (random(2.5) > 1.0) {
 					apple = new Apple(nearestPipe.x + pipeDistPixels * 3 - pipeDistPixels / 2 + pipeWidth / 2)
 				} else {
 					poison = new Apple(nearestPipe.x + pipeDistPixels * 3 - pipeDistPixels / 2 + pipeWidth / 2, POISON)
@@ -444,7 +445,7 @@ function draw() {
 	}
 	bird.show()
 
-	background(70, bgGreen, 70, darkness)
+	background(70, bgGreen, 70, 140)
 
 	fill(255)
 	textSize(30)
@@ -756,7 +757,7 @@ function toggleSound() {
 
 function setMusic(flag) {
 	if (flag) {
-		sMusic.setVolume(0.20)
+		sMusic.setVolume(0.8)
 	} else {
 		sMusic.setVolume(0)
 	}
