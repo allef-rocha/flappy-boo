@@ -153,7 +153,9 @@ const scrSoundOff = 'assets/sound-off.png'
 let musicon
 let soundon
 
+let readyToGo = false
 const fr = 60
+
 
 function preload() {
 	sMusic = loadSound("assets/sounds/bgmusic.wav")
@@ -224,12 +226,6 @@ function setup() {
 	highestPoints = localStorage.flappy_boo_record
 	musicon = localStorage.flappy_boo_music === "true"
 	soundon = localStorage.flappy_boo_sound === "true"
-
-
-	const splash = document.querySelector('.splash')
-	// setTimeout(()=>{
-	splash.classList.add('display-none')
-	// },2000)
 
 
 	mobileDevice = isMobile()
@@ -307,6 +303,13 @@ function setup() {
 	bird = new Bird()
 	i = 4
 	background(0)
+
+	const splash = document.querySelector('.splash')
+	splash.classList.add('display-none')
+
+	setTimeout(() => {
+		readyToGo = true
+	}, 1000)
 }
 
 function draw() {
@@ -454,7 +457,7 @@ function draw() {
 			textAlign(CENTER)
 			if (mobileDevice) {
 				textSize(30)
-				text("Press to start", mobileWidth / 2, height / 2)
+				text("Tap to start", mobileWidth / 2, height / 2)
 
 			} else {
 				textSize(30)
@@ -565,7 +568,7 @@ function endGame() {
 	msg = true
 	gameOverText = "Game Over"
 	pressEnterText = "Press 'Space' to restart"
-	pressEnterMobileText = "Press to restart"
+	pressEnterMobileText = "Tap to restart"
 	noLoop()
 	reset = true
 	soundDiv.style.display = 'none'
@@ -609,103 +612,107 @@ function setGradient(x, y, w, h, c1, c2) {
 }
 
 function touchStarted(e) {
-	e.preventDefault()
-	let x, y
-	if (e.touches) {
-		x = e.touches[0].clientX
-		y = e.touches[0].clientY
-	}
-	if (mobileDevice && x > mobileWidth - 55 && y < 60 && init && !starting && !gameOver) {
-		if (paused) {
-			unpauseGame()
-		} else {
-			pauseGame()
+	if (readyToGo) {
+		e.preventDefault()
+		let x, y
+		if (e.touches) {
+			x = e.touches[0].clientX
+			y = e.touches[0].clientY
 		}
-		sZap.play()
-	} else if (!starting) {
-		if (!gameOver) {
-			if (!paused && !init) {
-				countAndPlay()
-			} else {
-				if (!paused) bird.jump()
-			}
-			init = true
-		} else if (gameOver && littleTime) {
-			msg = false
-			pressEnterText = ""
-			pressEnterMobileText = ""
-			gameOver = false
-			littleTime = false
-			push()
-			fill(bird.color)
-			textAlign(CENTER)
-			textSize(50)
-			if (mobileDevice) {
-				translate(mobileWidth / 2, height * 0.7)
-			} else {
-				translate(width / 2, height * 0.7)
-			}
-			let rot = random(0.5, 0.8) * PI / 8
-			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
-			text("Go!", 0, 0)
-			sZap.play()
-			textAlign(LEFT, BASELINE)
-			pop()
-
-			// gameOverText = random(phrases)
-			pulse = true
-			setTimeout(() => {
-				loop()
-				countAndPlay()
-			}, 800)
-		}
-	}
-}
-
-function keyPressed() {
-	if (!starting) {
-		if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && !gameOver) {
-			if (!paused && !init) {
-				countAndPlay()
-			} else {
-				if (!paused) bird.jump()
-			}
-			init = true
-		} else if ((keyCode === BACKSPACE || key === 'p' || key === 'P') && !gameOver && init) {
+		if (mobileDevice && x > mobileWidth - 55 && y < 60 && init && !starting && !gameOver) {
 			if (paused) {
 				unpauseGame()
 			} else {
 				pauseGame()
 			}
 			sZap.play()
-		} else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
-			msg = false
-			pressEnterText = ""
-			pressEnterMobileText = ""
-			gameOver = false
-			littleTime = false
-			push()
-			fill(bird.color)
-			textSize(50)
-			textAlign(CENTER)
-			if (mobileDevice) {
-				translate(mobileWidth / 2, height * 0.7)
-			} else {
-				translate(width / 2, height * 0.7)
-			}
-			let rot = random(0.5, 1) * PI / 8
-			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
-			text("Go!", 0, 0)
-			sZap.play()
-			textAlign(LEFT, BASELINE)
-			pop()
+		} else if (!starting) {
+			if (!gameOver) {
+				if (!paused && !init) {
+					countAndPlay()
+				} else {
+					if (!paused) bird.jump()
+				}
+				init = true
+			} else if (gameOver && littleTime) {
+				msg = false
+				pressEnterText = ""
+				pressEnterMobileText = ""
+				gameOver = false
+				littleTime = false
+				push()
+				fill(bird.color)
+				textAlign(CENTER)
+				textSize(50)
+				if (mobileDevice) {
+					translate(mobileWidth / 2, height * 0.7)
+				} else {
+					translate(width / 2, height * 0.7)
+				}
+				let rot = random(0.5, 0.8) * PI / 8
+				random(1) > 0.5 ? rotate(-rot) : rotate(rot)
+				text("Go!", 0, 0)
+				sZap.play()
+				textAlign(LEFT, BASELINE)
+				pop()
 
-			// gameOverText = random(phrases)
-			pulse = true
-			setTimeout(() => {
-				loop()
-				countAndPlay()
-			}, 800)
+				// gameOverText = random(phrases)
+				pulse = true
+				setTimeout(() => {
+					loop()
+					countAndPlay()
+				}, 800)
+			}
+		}
+	}
+}
+
+function keyPressed() {
+	if (readyToGo) {
+		if (!starting) {
+			if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && !gameOver) {
+				if (!paused && !init) {
+					countAndPlay()
+				} else {
+					if (!paused) bird.jump()
+				}
+				init = true
+			} else if ((keyCode === BACKSPACE || key === 'p' || key === 'P') && !gameOver && init) {
+				if (paused) {
+					unpauseGame()
+				} else {
+					pauseGame()
+				}
+				sZap.play()
+			} else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
+				msg = false
+				pressEnterText = ""
+				pressEnterMobileText = ""
+				gameOver = false
+				littleTime = false
+				push()
+				fill(bird.color)
+				textSize(50)
+				textAlign(CENTER)
+				if (mobileDevice) {
+					translate(mobileWidth / 2, height * 0.7)
+				} else {
+					translate(width / 2, height * 0.7)
+				}
+				let rot = random(0.5, 1) * PI / 8
+				random(1) > 0.5 ? rotate(-rot) : rotate(rot)
+				text("Go!", 0, 0)
+				sZap.play()
+				textAlign(LEFT, BASELINE)
+				pop()
+
+				// gameOverText = random(phrases)
+				pulse = true
+				setTimeout(() => {
+					loop()
+					countAndPlay()
+				}, 800)
+			}
 		}
 	}
 }
