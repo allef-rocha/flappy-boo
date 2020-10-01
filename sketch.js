@@ -309,9 +309,9 @@ function draw() {
 			msg = false
 			starting = false
 			sDing2.play()
-			setTimeout(()=>{
+			// setTimeout(()=>{
 				sMusic.loop()
-			},100)
+			// },100)
 		}
 	} else {
 		if (apple && apple.eaten(bird)) {
@@ -540,9 +540,9 @@ function endGame() {
 	pressEnterMobileText = "Press to restart"
 	noLoop()
 	reset = true
+	soundDiv.style.display = 'none'
 	setTimeout(() => {
 		littleTime = true
-		soundDiv.style.display = 'none'
 	}, 600)
 }
 
@@ -740,9 +740,9 @@ function setSound(flag) {
 }
 
 function pauseGame() {
+	sMusic.pause()
 	soundDiv.style.display = 'block'
 	paused = true
-	sMusic.pause()
 	noLoop()
 }
 
