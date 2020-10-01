@@ -5,7 +5,7 @@ let flagTransitSound = true
 
 function Bird() {
     this.x = birdX
-    this.y = height / 4
+    this.y = height * 0.36
     this.r = birdRadius
     this.velocity = 0
     this.acc = 0.8

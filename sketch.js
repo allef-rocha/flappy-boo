@@ -1,18 +1,16 @@
+p5.disableFriendlyErrors = true;
+
 const width = 1000
 let height = 540
 let mobileWidth = 372
 
 const colors = [
-	"#C97A15",
+	"#000000",
 	"#119B28",
-	"#67119B",
+	"#DF4AC6",
 	"#DCD925",
 	"#AE1313",
 	"#DADADA",
-	"#36CABE",
-	"#DF4AC6",
-	"#21247B",
-	"#000000",
 ]
 
 const phrases = [
@@ -30,7 +28,7 @@ const imgPipeWidth = 550
 const imgCloudWidth = 100
 const imgCloudHeight = 52
 
-const numGhostImgs = 10
+const numGhostImgs = 6
 
 const netX = width - 150
 const netY = 120
@@ -141,10 +139,19 @@ let sPowerUp
 let sTransition
 let sZap
 
+let soudDiv
+let soundIcon
+let musicIcon
+const scrMusicOn = 'assets/music-on.png'
+const scrMusicOff = 'assets/music-off.png'
+const scrSoundOn = 'assets/sound-on.png'
+const scrSoundOff = 'assets/sound-off.png'
+let musicon = true
+let soundon = true
+
 const fr = 60
 
 function preload() {
-
 	sMusic = loadSound("assets/sounds/bgmusic.wav")
 	sDead = loadSound("assets/sounds/dead.wav")
 	sDing1 = loadSound("assets/sounds/ding1.wav")
@@ -206,16 +213,11 @@ function transparence(img, val) {
 }
 
 function setup() {
-	sMusic.setVolume(0.13)
-	// music.loop()
+	const splash = document.querySelector('.splash')
+	// setTimeout(()=>{
+	splash.classList.add('display-none')
+	// },2000)
 
-	sDead.setVolume(0.2)
-	sDing1.setVolume(0.15)
-	sDing2.setVolume(0.15)
-	sJump.setVolume(0.15)
-	sPowerUp.setVolume(0.2)
-	sTransition.setVolume(0.2)
-	sZap.setVolume(0.15)
 
 	mobileDevice = isMobile()
 	setFrameRate(fr)
@@ -270,15 +272,30 @@ function setup() {
 	textAlign(LEFT, BASELINE)
 	textSize(30)
 
-	bird = new Bird()
+	soundDiv = document.querySelector('.sound-control')
+	soundIcon = document.querySelector('#sound-icon')
+	musicIcon = document.querySelector('#music-icon')
 
+	if (mobileDevice) {
+		soundIcon.ontouchstart = toggleSound
+		musicIcon.ontouchstart = toggleMusic
+
+	} else {
+		soundIcon.onclick = toggleSound
+		musicIcon.onclick = toggleMusic
+	}
+
+	setMusic(musicon)
+	setSound(soundon)
+
+	bird = new Bird()
 	i = 4
 	background(0)
 }
 
 function draw() {
 	background(10, 10, 40)
-	
+
 	if (reset) resetGame()
 	if (starting) {
 		if (count % fr == 0) {
@@ -292,6 +309,9 @@ function draw() {
 			msg = false
 			starting = false
 			sDing2.play()
+			setTimeout(()=>{
+				sMusic.loop()
+			},100)
 		}
 	} else {
 		if (apple && apple.eaten(bird)) {
@@ -386,6 +406,7 @@ function draw() {
 	// setGradient(-groundStroke / 2, height+groundStroke/4, width + groundStroke, groundHeight, color(0,155), color(0,0))
 
 	if (pipeColision(bird, nearestPipe)) {
+		sMusic.stop()
 		sDead.play()
 		bird.dead = true
 		endGame()
@@ -437,7 +458,7 @@ function draw() {
 			textAlign(LEFT, BASELINE)
 		}
 	}
-	if (mobileDevice && init && !starting) {
+	if (mobileDevice && init && !starting && !gameOver) {
 		fill(255, 200)
 		noStroke()
 		if (!paused) {
@@ -461,7 +482,7 @@ function draw() {
 		fill(255, 200)
 		textSize(40)
 		let w = mobileDevice ? mobileWidth : width
-		text("Paused", w / 2, height / 2)
+		text("Paused", w / 2, height / 4)
 	}
 	count++
 }
@@ -521,6 +542,7 @@ function endGame() {
 	reset = true
 	setTimeout(() => {
 		littleTime = true
+		soundDiv.style.display = 'none'
 	}, 600)
 }
 
@@ -561,13 +583,11 @@ function touchStarted(e) {
 		x = e.touches[0].clientX
 		y = e.touches[0].clientY
 	}
-	if (x > 300 && y < 60 && mobileDevice && init && !starting) {
+	if (x > 300 && y < 60 && mobileDevice && init && !starting && !gameOver) {
 		if (paused) {
-			paused = false
-			countAndPlay(false)
+			unpauseGame()
 		} else {
-			paused = true
-			noLoop()
+			pauseGame()
 		}
 		sZap.play()
 	} else if (!starting) {
@@ -619,13 +639,11 @@ function keyPressed() {
 				bird.jump()
 			}
 			init = true
-		} else if (keyCode === BACKSPACE && !gameOver && init) {
+		} else if ((keyCode === BACKSPACE || key === 'p' || key === 'P') && !gameOver && init) {
 			if (paused) {
-				paused = false
-				countAndPlay(false)
+				unpauseGame()
 			} else {
-				paused = true
-				noLoop()
+				pauseGame()
 			}
 			sZap.play()
 		} else if ((keyCode === ENTER || keyCode === UP_ARROW || key === " ") && gameOver && littleTime) {
@@ -656,7 +674,7 @@ function keyPressed() {
 	}
 }
 
-countAndPlay = function (willJump = false) {
+const countAndPlay = function (willJump = false) {
 	msg = true
 	gameOverText = ""
 	gameOver = false
@@ -664,5 +682,72 @@ countAndPlay = function (willJump = false) {
 	paused = false
 	count = 0
 	loop()
-	if (willJump) bird.jump()
+	// if (willJump) bird.jump()
+}
+
+function toggleMusic() {
+	let src
+	if (musicon) {
+		src = scrMusicOff
+		setMusic(false)
+	} else {
+		src = scrMusicOn
+		setMusic(true)
+	}
+	musicon = !musicon
+	musicIcon.src = src
+}
+
+function toggleSound() {
+	let src
+	if (soundon) {
+		src = scrSoundOff
+		setSound(false)
+	} else {
+		src = scrSoundOn
+		setSound(true)
+	}
+	soundon = !soundon
+	soundIcon.src = src
+}
+
+function setMusic(flag) {
+	if (flag) {
+		sMusic.setVolume(0.20)
+	} else {
+		sMusic.setVolume(0)
+	}
+}
+
+function setSound(flag) {
+	if (flag) {
+		sDead.setVolume(0.20)
+		sDing1.setVolume(0.13)
+		sDing2.setVolume(0.15)
+		sJump.setVolume(0.15)
+		sPowerUp.setVolume(0.20)
+		sTransition.setVolume(0.15)
+		sZap.setVolume(0.14)
+	} else {
+		sDead.setVolume(0.0)
+		sDing1.setVolume(0.0)
+		sDing2.setVolume(0.0)
+		sJump.setVolume(0.0)
+		sPowerUp.setVolume(0.0)
+		sTransition.setVolume(0.0)
+		sZap.setVolume(0.0)
+	}
+}
+
+function pauseGame() {
+	soundDiv.style.display = 'block'
+	paused = true
+	sMusic.pause()
+	noLoop()
+}
+
+function unpauseGame() {
+	soundDiv.style.display = 'none'
+	paused = false
+	countAndPlay(false)
 }
