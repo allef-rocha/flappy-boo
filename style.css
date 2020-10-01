@@ -103,10 +103,10 @@ canvas {
     display: none;
     z-index: 200;
     position: absolute;
-    margin-top: 32vh;
+    margin-top: 28vh;
     height: 300px;
     width: 300px;
-    opacity: 0.6;
+    opacity: 0.4;
     border-radius: 50px;
 }
 
