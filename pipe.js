@@ -8,6 +8,8 @@ function Pipe(x, y){
     this.notColided = false
     this.color = 255,100
 
+    this.dir = random([-1,1])
+
     this.show = function(){
         // fill(this.color)
         noStroke()
@@ -22,6 +24,14 @@ function Pipe(x, y){
 
     this.update = function(){
         this.x -= this.speed
+        
+        let nextY = this.y + this.dir*pipeYspeed
+        if(nextY > 0 && nextY + this.gap < height){
+            this.y = nextY
+        }else{
+            this.dir *= -1
+            this.y += this.dir*pipeYspeed
+        }
         // if(this.colided){
         //     this.color = [255,125,125,100]
         // }else if(this.notColided){

@@ -4,6 +4,7 @@ let flagTransitSound = true
 
 
 function Bird() {
+    stage = 0
     this.x = birdX
     this.y = height * 0.36
     this.r = birdRadius
@@ -17,7 +18,9 @@ function Bird() {
     this.image = ghostImgsTint[this.imageIndex]
     this.score = 0
     this.intangible = false
+    this.nauseable = false
     this.clock = 0
+    this.nauseClock = 0
     this.dead = false
 
     this.show = function () {
@@ -42,12 +45,12 @@ function Bird() {
             // arc(this.x+11,this.y+17,15,10,PI+0.4,-0.4,OPEN) 
             ellipse(this.x + 5, this.y, 15)
             ellipse(this.x + 20, this.y + 1, 10, 12)
-        } else if (stage == 0) {
+        } else if (stage == 0 || stage == 3) {
             fill(this.color)
             stroke(255)
             strokeWeight(1)
             ellipse(this.x, this.y, this.r * 2)
-            if (this.dead) {
+            if (this.dead || stage == 3) {
                 fill(191, 242, 255, 200)
                 arc(this.x + 5, this.y, 15, 15, -HALF_PI + 0.9, PI, CHORD)
                 arc(this.x + 20, this.y + 1, 10, 12, 0, -HALF_PI - 0.7, CHORD)
@@ -92,13 +95,32 @@ function Bird() {
             if (this.clock > powerTime) {
                 this.toNormal()
             } else if (this.clock > powerTime * 0.75) {
-                if(flagTransitSound){
+                if (flagTransitSound) {
                     sTransition.play()
                     flagTransitSound = false
-                } 
+                }
                 if (count % 25 === 0) {
                     stage = stage === 1 ? 2 : 1
                 }
+            }
+        }
+        if (this.nauseable) {
+            this.nauseClock++
+            if (this.nauseClock > powerTime) {
+                pipeYspeed = 0
+                stage = 0
+                this.nauseClock = 0
+                this.nauseable = false
+                bgGreen = 70
+            } else if (this.nauseClock > powerTime*0.9) {
+                bgGreen = constrain(bgGreen + (powerTime*0.9 - this.nauseClock)/4,70,90)
+                if (flagTransitSound) {
+                    sTransition.play()
+                    sMusic.rate(1)
+                    flagTransitSound = false
+                }
+            } else {
+                bgGreen = constrain(this.nauseClock/6 + 70, 70, 90)
             }
         }
         this.velocity = min(this.velocity + this.acc, this.maxSpeed)
@@ -126,6 +148,15 @@ function Bird() {
         this.intangible = true
         this.clock = 0
         stage = 1
+    }
+
+    this.nausea = function () {
+        pipeYspeed = 0.5
+        sMusic.rate(0.95)
+        this.nauseable = true
+        this.nauseaClock = 0
+        bgGreen = 110
+        stage = 3
     }
 
     this.toNormal = function () {

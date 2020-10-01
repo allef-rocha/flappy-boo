@@ -121,7 +121,10 @@ let mobileDevice = false
 let msg = true
 
 let apple = null
+let poison = null
 let applesEaten = 0
+
+let pipeYspeed = 0
 
 let canvas
 let sky
@@ -129,6 +132,7 @@ let fog
 
 let darkness = 150
 let increment = 1
+let bgGreen = 70
 
 let sMusic
 let sDead
@@ -146,8 +150,8 @@ const scrMusicOn = 'assets/music-on.png'
 const scrMusicOff = 'assets/music-off.png'
 const scrSoundOn = 'assets/sound-on.png'
 const scrSoundOff = 'assets/sound-off.png'
-let musicon = true
-let soundon = true
+let musicon
+let soundon
 
 const fr = 60
 
@@ -172,11 +176,6 @@ function preload() {
 	}
 
 	moonLight = loadFont('fonts/Moon Bold.otf')
-	if (localStorage.flappy_boo_record) {
-		highestPoints = localStorage.flappy_boo_record
-	} else {
-		localStorage.setItem('flappy_boo_record', 0)
-	}
 }
 
 p5.Image.prototype.tint = function (img, r, g, b, a) {
@@ -213,6 +212,20 @@ function transparence(img, val) {
 }
 
 function setup() {
+	if (localStorage.flappy_boo_record === undefined) {
+		localStorage.setItem('flappy_boo_record', 0)
+	}
+	if (localStorage.flappy_boo_sound === undefined) {
+		localStorage.setItem('flappy_boo_sound', true)
+	}
+	if (localStorage.flappy_boo_music === undefined) {
+		localStorage.setItem('flappy_boo_music', true)
+	}
+	highestPoints = localStorage.flappy_boo_record
+	musicon = localStorage.flappy_boo_music === "true"
+	soundon = localStorage.flappy_boo_sound === "true"
+
+
 	const splash = document.querySelector('.splash')
 	// setTimeout(()=>{
 	splash.classList.add('display-none')
@@ -275,6 +288,9 @@ function setup() {
 	soundDiv = document.querySelector('.sound-control')
 	soundIcon = document.querySelector('#sound-icon')
 	musicIcon = document.querySelector('#music-icon')
+	musicIcon.src = musicon ? scrMusicOn : scrMusicOff
+	soundIcon.src = soundon ? scrSoundOn : scrSoundOff
+
 
 	if (mobileDevice) {
 		soundIcon.ontouchstart = toggleSound
@@ -310,7 +326,7 @@ function draw() {
 			starting = false
 			sDing2.play()
 			// setTimeout(()=>{
-				sMusic.loop()
+			sMusic.loop()
 			// },100)
 		}
 	} else {
@@ -320,6 +336,11 @@ function draw() {
 			// console.log("comeu")
 			apple = null
 			bird.powerUp()
+		}
+		if (poison && poison.eaten(bird)) {
+			sDead.play()
+			poison = null
+			bird.nausea()
 		}
 		// compute point
 		if (nearestPipe.x < birdX - birdRadius - pipeWidth) {
@@ -332,9 +353,12 @@ function draw() {
 				highestPoints = currentPoints
 				localStorage.flappy_boo_record = highestPoints
 			}
-			if ((currentPoints + 3) % 10 == 0 && random(applesEaten) < 0.9) {
-				apple = new Apple(nearestPipe.x + pipeDistPixels * 3 - pipeDistPixels / 2 + pipeWidth / 2)
-				// console.log("maçã")
+			if ((currentPoints + 3) % 10 == 0) {
+				if (random(applesEaten) < 0.9) {
+					apple = new Apple(nearestPipe.x + pipeDistPixels * 3 - pipeDistPixels / 2 + pipeWidth / 2)
+				} else {
+					poison = new Apple(nearestPipe.x + pipeDistPixels * 3 - pipeDistPixels / 2 + pipeWidth / 2, POISON)
+				}
 			}
 		}
 
@@ -367,6 +391,8 @@ function draw() {
 		})
 		if (apple)
 			apple.update()
+		if (poison)
+			poison.update()
 	}
 
 	clouds.forEach((cloud, index) => {
@@ -391,6 +417,8 @@ function draw() {
 
 	if (apple)
 		apple.show()
+	if (poison)
+		poison.show()
 
 	fill(0, 80)
 	rect(-groundStroke / 2, height, width + groundStroke, groundHeight)
@@ -413,7 +441,7 @@ function draw() {
 	}
 	bird.show()
 
-	background(70, 70, 70, darkness)
+	background(70, bgGreen, 70, darkness)
 
 	fill(255)
 	textSize(30)
@@ -550,6 +578,7 @@ function resetGame() {
 	count = 0
 	applesEaten = 0
 	bird = new Bird()
+	bgGreen = 70
 	pipes = []
 	bones = []
 	for (let i = 0; i < 4; i++) {
@@ -560,6 +589,9 @@ function resetGame() {
 	nearestPipe = pipes[0]
 	currentPoints = 0
 	apple = null
+	poison = null
+	pipeYspeed = 0
+	sMusic.rate(1)
 	reset = false
 }
 
@@ -583,7 +615,7 @@ function touchStarted(e) {
 		x = e.touches[0].clientX
 		y = e.touches[0].clientY
 	}
-	if (x > 300 && y < 60 && mobileDevice && init && !starting && !gameOver) {
+	if (mobileDevice && x > mobileWidth - 55 && y < 60 && init && !starting && !gameOver) {
 		if (paused) {
 			unpauseGame()
 		} else {
@@ -595,7 +627,7 @@ function touchStarted(e) {
 			if (!paused && !init) {
 				countAndPlay()
 			} else {
-				bird.jump()
+				if (!paused) bird.jump()
 			}
 			init = true
 		} else if (gameOver && littleTime) {
@@ -636,7 +668,7 @@ function keyPressed() {
 			if (!paused && !init) {
 				countAndPlay()
 			} else {
-				bird.jump()
+				if (!paused) bird.jump()
 			}
 			init = true
 		} else if ((keyCode === BACKSPACE || key === 'p' || key === 'P') && !gameOver && init) {
@@ -656,7 +688,11 @@ function keyPressed() {
 			fill(bird.color)
 			textSize(50)
 			textAlign(CENTER)
-			translate(width / 2, height * 0.7)
+			if (mobileDevice) {
+				translate(mobileWidth / 2, height * 0.7)
+			} else {
+				translate(width / 2, height * 0.7)
+			}
 			let rot = random(0.5, 1) * PI / 8
 			random(1) > 0.5 ? rotate(-rot) : rotate(rot)
 			text("Go!", 0, 0)
@@ -717,6 +753,7 @@ function setMusic(flag) {
 	} else {
 		sMusic.setVolume(0)
 	}
+	localStorage.flappy_boo_music = flag
 }
 
 function setSound(flag) {
@@ -737,6 +774,7 @@ function setSound(flag) {
 		sTransition.setVolume(0.0)
 		sZap.setVolume(0.0)
 	}
+	localStorage.flappy_boo_sound = flag
 }
 
 function pauseGame() {
