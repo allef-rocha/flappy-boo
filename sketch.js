@@ -757,7 +757,7 @@ function toggleSound() {
 
 function setMusic(flag) {
 	if (flag) {
-		sMusic.setVolume(0.8)
+		sMusic.setVolume(0.60)
 	} else {
 		sMusic.setVolume(0)
 	}
