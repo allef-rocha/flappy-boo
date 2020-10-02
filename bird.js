@@ -112,8 +112,9 @@ function Bird() {
                 this.nauseClock = 0
                 this.nauseable = false
                 bgGreen = 70
+                flagTransitSound = true
             } else if (this.nauseClock > powerTime*0.9) {
-                bgGreen = constrain(bgGreen + (powerTime*0.9 - this.nauseClock)/4,70,90)
+                bgGreen = constrain(bgGreen + (powerTime*0.9 - this.nauseClock)/6,70,90)
                 if (flagTransitSound) {
                     sTransition.play()
                     sMusic.rate(1)
